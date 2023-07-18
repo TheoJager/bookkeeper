@@ -24,8 +24,10 @@
 *.doc*
 *.ppt*
 *.xls*
+*.spec*
 rsa.public
 rsa.private
 .idea/
 images/
 test.*
+__pycache__/
