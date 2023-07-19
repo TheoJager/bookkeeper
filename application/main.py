@@ -83,7 +83,7 @@ records_to_categories.grid( row = 2, column = 0, columnspan = 1, sticky = 'nsew'
 #######################################
 
 Database_Categories.create_table_if_not_exists()
-  
+
 records = [
   {
     'ctr_name'  : 'Incidenteel',
@@ -119,7 +119,10 @@ records = [
   },
 ]
 for record in records:
-  Database_Categories.insert( record )
+    try:
+      Database_Categories.insert( record )
+    except Exception:
+      continue
 
 # CATEGORIE
 # bedragen deze maand
