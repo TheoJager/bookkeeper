@@ -1,19 +1,65 @@
 from tkinter import *
 
-from application.csv_upload import open_csv_file
+from application.csv.csv_upload import csv_get_filename, csv_to_records
 from application.database.database_mutations import Database_Mutations
 
 root = Tk()
-root.title('bookkeeper')
-root.iconbitmap('D:/python/bookkeeper/favicon.ico')
-root.geometry('1000x600')
+root.title( 'bookkeeper' )
+root.iconbitmap( 'D:/python/bookkeeper/favicon.ico' )
+root.geometry( '1000x600' )
 
 
 # pyinstaller --onefile --noconsole --icon=favicon.ico main.py
 
 
-def get(dictionary, key, default=None):
-    return dictionary[key] if key in dictionary.keys() else default
+def get( dictionary, key, default = None ):
+  return dictionary[ key ] if key in dictionary.keys() else default
+
+
+# BOOKKEEPER
+#######################################
+
+name = Label(text = "Bookkeeper")
+name.grid( row = 0, column = 0, columnspan = 1, sticky = 'nsew' )
+
+import locale
+import datetime
+
+x = datetime.datetime.now()
+
+locale.setlocale(locale.LC_TIME, "nl_NL")
+
+date = Label(text = x.strftime("%B %Y"))
+date.grid( row = 0, column = 1, columnspan = 1, sticky = 'nsew' )
+
+# IMPORT EXCEL
+# create database
+# add mutations to database
+#######################################
+
+Database_Mutations.create_table_if_not_exists()
+
+def csv_to_database():
+  records = csv_to_records( csv_get_filename() )
+  for record in records:
+    try:
+      Database_Mutations.insert( record )
+    except Exception:
+      continue
+
+
+upload_csv = Button( root, text = 'Upload CSV File', command = csv_to_database )
+upload_csv.grid( row = 1, column = 0, columnspan = 1, sticky = 'nsew' )
+
+# MUTATIONS
+# add categories (ai)
+#######################################
+
+def add_categories():
+  pass
+
+records_to_categories = Button( root, text = 'Voeg categorien toe', command = add_categories )
+records_to_categories.grid( row = 2, column = 0, columnspan = 1, sticky = 'nsew' )
 
 
 # IMPORT EXCEL
@@ -23,15 +69,6 @@ def get(dictionary, key, default=None):
 # toevoegen aan categorie (ai)
 # initieer tabellen
 #######################################
-
-Database_Mutations.create_table_if_not_exists()
-
-
-def csv_to_database():
-    records = open_csv_file()
-
-
-Button(root, text='Upload CSV File', command=csv_to_database).pack()
 
 # LABEL
 # deze maand
@@ -58,4 +95,4 @@ Button(root, text='Upload CSV File', command=csv_to_database).pack()
 
 
 if __name__ == '__main__':
-    root.mainloop()
+  root.mainloop()

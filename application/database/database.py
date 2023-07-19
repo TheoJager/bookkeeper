@@ -5,19 +5,19 @@ from typing import Dict
 
 class Database:
 
-    def __init__(self):
-        return
+  def __init__( self ):
+    return
 
-    @staticmethod
-    def query(sql: str, variables: Dict = None) -> list:
-        db = sqlite3.connect('bookkeeper.db')
+  @staticmethod
+  def query( sql: str, variables: Dict = None ) -> list:
+    db = sqlite3.connect( 'bookkeeper.db' )
 
-        cursor = db.cursor()
-        cursor.execute(sql, {} if variables is None else variables)
+    cursor = db.cursor()
+    cursor.execute( sql, { } if variables is None else variables )
 
-        records = cursor.fetchall()
+    records = cursor.fetchall()
 
-        db.commit()
-        db.close()
+    db.commit()
+    db.close()
 
-        return records
+    return records

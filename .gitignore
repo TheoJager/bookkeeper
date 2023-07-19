@@ -31,3 +31,5 @@ rsa.private
 images/
 test.*
 __pycache__/
+bookkeeper.db
+identifier.sqlite
