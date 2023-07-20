@@ -5,7 +5,12 @@ from tkinter import filedialog
 
 
 def csv_get_header( path: str ) -> str:
-  return open( path, 'r' ).readline()
+  csv_file = open( path, 'r' )
+
+  header = csv_file.readline()
+
+  csv_file.close()
+  return header
 
 
 def csv_get_delimiter( header: str ) -> str:

@@ -68,8 +68,6 @@ records_to_categories.grid( row = 2, column = 0, columnspan = 1, sticky = 'nsew'
 # IMPORT EXCEL
 # basis bedrag
 # toevoegen records
-# check dubbel
-# toevoegen aan categorie (ai)
 # initieer tabellen
 #######################################
 
@@ -85,44 +83,20 @@ records_to_categories.grid( row = 2, column = 0, columnspan = 1, sticky = 'nsew'
 Database_Categories.create_table_if_not_exists()
 
 records = [
-  {
-    'ctr_name'  : 'Incidenteel',
-    'ctr_income': 0,
-  },
-  {
-    'ctr_name'  : 'Eten',
-    'ctr_income': 0,
-  },
-  {
-    'ctr_name'  : 'Boodschappen',
-    'ctr_income': 0,
-  },
-  {
-    'ctr_name'  : 'Abonnementen',
-    'ctr_income': 0,
-  },
-  {
-    'ctr_name'  : 'Kosten',
-    'ctr_income': 0,
-  },
-  {
-    'ctr_name'  : 'Sparen',
-    'ctr_income': 0,
-  },
-  {
-    'ctr_name'  : 'Beleggingen',
-    'ctr_income': 0,
-  },
-  {
-    'ctr_name'  : 'Salaris',
-    'ctr_income': 1,
-  },
+  { 'ctr_income': 0, 'ctr_sequence': 1, 'ctr_name': 'Incidenteel' },
+  { 'ctr_income': 0, 'ctr_sequence': 2, 'ctr_name': 'Eten' },
+  { 'ctr_income': 0, 'ctr_sequence': 3, 'ctr_name': 'Boodschappen' },
+  { 'ctr_income': 0, 'ctr_sequence': 4, 'ctr_name': 'Abonnementen' },
+  { 'ctr_income': 0, 'ctr_sequence': 5, 'ctr_name': 'Kosten' },
+  { 'ctr_income': 0, 'ctr_sequence': 6, 'ctr_name': 'Sparen' },
+  { 'ctr_income': 0, 'ctr_sequence': 7, 'ctr_name': 'Beleggingen' },
+  { 'ctr_income': 1, 'ctr_sequence': 8, 'ctr_name': 'Salaris' },
 ]
 for record in records:
-    try:
-      Database_Categories.insert( record )
-    except Exception:
-      continue
+  try:
+    Database_Categories.insert( record )
+  except Exception:
+    continue
 
 # CATEGORIE
 # bedragen deze maand
