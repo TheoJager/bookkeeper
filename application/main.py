@@ -108,7 +108,7 @@ class App(customtkinter.CTk):
     # configure window
     #######################################
     self.title("Bookkeeper")
-    self.geometry(f"{1100}x{580}")
+    self.geometry(f"{1200}x{580}")
 
     # configure grid layout (4x4)
     #######################################
@@ -155,6 +155,40 @@ class App(customtkinter.CTk):
     font = customtkinter.CTkFont(size=16, weight="bold")
     month_label = customtkinter.CTkLabel(sidebar_frame, text=content, font=font)
     month_label.grid(row=5, column=0, padx=20, pady=(20, 10))
+
+    # create categorie data
+    #######################################
+    categorie_frame = customtkinter.CTkFrame(self, fg_color="transparent")
+    categorie_frame.grid( row = 0, column = 1, padx = (20, 20), pady = (5, 5), sticky = "nsew" )
+
+    main_button_1 = customtkinter.CTkButton( categorie_frame, text="incidenteel", fg_color = "transparent",
+      border_width = 1, text_color = ("gray10", "#DCE4EE"), command=add_categories )
+    main_button_1.grid( row = 1, column = 1, padx = (5, 5), pady = (20, 20),
+      sticky = "nsew" )
+
+    main_button_1 = customtkinter.CTkButton( categorie_frame, text="€-1562.75", fg_color = "transparent",
+      border_width = 1, text_color = ("gray10", "#DCE4EE"), command=add_categories )
+    main_button_1.grid( row = 1, column = 2, padx = (5, 5), pady = (20, 20),
+      sticky = "nsew" )
+
+    main_button_1 = customtkinter.CTkButton( categorie_frame, text="-10.8%", fg_color = "transparent",
+      border_width = 1, text_color = ("gray10", "#DCE4EE"), command=add_categories )
+    main_button_1.grid( row = 1, column = 3, padx = (5, 5), pady = (20, 20),      sticky = "nsew" )
+
+    main_button_1 = customtkinter.CTkButton( categorie_frame, text="€-65.25", fg_color = "transparent",
+      border_width = 1, text_color = ("gray10", "#DCE4EE"), command=add_categories )
+    main_button_1.grid( row = 1, column = 5, padx = (5, 5), pady = (20, 20),
+      sticky = "nsew" )
+
+    main_button_1 = customtkinter.CTkButton( categorie_frame, text="-5.4%", fg_color = "transparent",
+      border_width = 1, text_color = ("gray10", "#DCE4EE"), command=add_categories )
+    main_button_1.grid( row = 1, column = 6, padx = (5, 5), pady = (20, 20), sticky = "nsew" )
+
+
+    # create table
+    #######################################
+    categorie_table = customtkinter.CTkFrame(self, fg_color="transparent")
+    categorie_table.grid( row = 0, column = 2, padx = (20, 20), pady = (20, 0), sticky = "nsew" )
 
 
 if __name__ == '__main__':
