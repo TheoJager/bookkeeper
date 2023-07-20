@@ -5,9 +5,6 @@ from typing import Dict
 
 class Database:
 
-  def __init__( self ):
-    return
-
   @staticmethod
   def query( sql: str, variables: Dict = None ) -> list:
     db = sqlite3.connect( 'bookkeeper.db' )

@@ -31,7 +31,7 @@ class Database_Mutations:
 
   @staticmethod
   def insert( record: Dict ):
-    sql = 'INSERT INTO mutations(mts_date, mts_amount, mts_description) VALUES(:mts_date, :mts_amount, :mts_description)'
+    sql = 'INSERT INTO mutations(mts_date, mts_amount, mts_description, mts_category) VALUES(:mts_date, :mts_amount, :mts_description, :mts_category)'
     execute = {
       'mts_date'       : record[ 'mts_date' ],
       'mts_amount'     : record[ 'mts_amount' ],

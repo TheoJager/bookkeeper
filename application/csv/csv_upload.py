@@ -29,6 +29,7 @@ def csv_to_records( path: str ) -> list:
       'mts_date'       : row[ 'Transactiedatum' ],
       'mts_amount'     : row[ 'Transactiebedrag' ],
       'mts_description': row[ 'Omschrijving' ],
+      'mts_start'      : row[ 'Beginsaldo' ],
       'mts_category'   : 0
     } )
 

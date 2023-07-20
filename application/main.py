@@ -1,5 +1,7 @@
-from tkinter import *
+import locale
+import datetime
 
+from tkinter import *
 from application.csv.csv_upload import csv_get_filename, csv_to_records
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
@@ -10,6 +12,13 @@ root.iconbitmap( 'D:/python/bookkeeper/favicon.ico' )
 root.geometry( '1000x600' )
 
 
+# PACKAGES
+#######################################
+# pyinstaller
+# customtkinter
+
+# COMPILE
+#######################################
 # pyinstaller --onefile --noconsole --icon=favicon.ico main.py
 
 
@@ -22,9 +31,6 @@ def get( dictionary, key, default = None ):
 
 name = Label( text = "Bookkeeper" )
 name.grid( row = 0, column = 0, columnspan = 1, sticky = 'nsew' )
-
-import locale
-import datetime
 
 x = datetime.datetime.now()
 
@@ -41,8 +47,19 @@ date.grid( row = 0, column = 1, columnspan = 1, sticky = 'nsew' )
 Database_Mutations.create_table_if_not_exists()
 
 
+def insert_base_value( record: list ):
+  if len( Database_Mutations.select() ) == 0:
+    Database_Mutations.insert( {
+      'mts_date'       : "19700101",
+      'mts_amount'     : record[ 'mts_start' ],
+      'mts_description': 'start',
+      'mts_category'   : 8,
+    } )
+
+
 def csv_to_database():
   records = csv_to_records( csv_get_filename() )
+  insert_base_value( records[ 0 ] )
   for record in records:
     try:
       Database_Mutations.insert( record )
