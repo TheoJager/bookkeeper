@@ -3,6 +3,7 @@ import datetime
 import sqlite3
 import customtkinter
 
+from application.ui.elements import Elements
 from application.csv.csv_upload import csv_get_filename, csv_to_records
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
@@ -58,13 +59,15 @@ def insert_base_value( record: list ):
 
 
 def csv_to_database():
-  records = csv_to_records( csv_get_filename() )
-  insert_base_value( records[ 0 ] )
-  for record in records:
-    try:
-      Database_Mutations.insert( record )
-    except sqlite3.IntegrityError:
-      continue
+  filename = csv_get_filename()
+  if (len( filename )):
+    records = csv_to_records( filename )
+    insert_base_value( records[ 0 ] )
+    for record in records:
+      try:
+        Database_Mutations.insert( record )
+      except sqlite3.IntegrityError:
+        continue
 
 
 # MUTATIONS
@@ -112,60 +115,34 @@ class App( customtkinter.CTk ):
 
     # configure grid layout (4x4)
     #######################################
-    self.grid_columnconfigure( (1, 4), weight = 3, minsize=400 )
+    self.grid_columnconfigure( (1, 4), weight = 3, minsize = 400 )
     self.grid_columnconfigure( (2, 3), weight = 1 )
     self.grid_rowconfigure( (0, 1), weight = 1 )
 
-    # sidebar
+    # FRAMES
     #############################
-    frame_sidebar = customtkinter.CTkFrame( self, corner_radius = 0 )
-    frame_sidebar.grid( row = 0, column = 0, rowspan = 4, sticky = "nsew" )
+    frame_sidebar = Elements.frame( self, 0, 0, 1, 4, 20, 20 )
+    frame_sidebar.configure( corner_radius = 0 )
+    frame_total = Elements.frame( self, 1, 0, 1, 1, (0, 20), 20 )
+    frame_month = Elements.frame( self, 2, 0, 1, 1, (0, 20), 20 )
+    frame_space = Elements.frame( self, 3, 0, 1, 1, (0, 20), 20 )
+    frame_space.configure( fg_color = "transparent" )
+    frame_table = Elements.frame( self, 4, 0, 1, 2, (0, 20), 20 )
+    frame_graph = Elements.frame( self, 1, 1, 3, 1, (0, 20), (0, 20) )
 
-    # totals
-    #############################
-    frame_totals = customtkinter.CTkFrame( self  )
-    frame_totals.grid( row = 0, column = 1, padx = (20, 20), pady = (20, 20),
-      sticky = "nsew" )
-
-    # this month
-    #############################
-    frame_month = customtkinter.CTkFrame( self )
-    frame_month.grid( row = 0, column = 2, padx = (20, 20), pady = (20, 20),
-      sticky = "nsew" )
-
-    # spacer
-    #############################
-    frame_space = customtkinter.CTkFrame( self, fg_color = "transparent" )
-    frame_space.grid( row = 0, column = 3, padx = (20, 20), pady = (20, 20),
-      sticky = "nsew" )
-
-    # table
-    #############################
-    frame_table = customtkinter.CTkFrame( self )
-    frame_table.grid( row = 0, column = 4, rowspan = 2, padx = (20, 20), pady = (20, 20),
-      sticky = "nsew" )
-
-    # graphs
-    #############################
-    frame_graphs = customtkinter.CTkFrame( self )
-    frame_graphs.grid( row = 1, column = 1, columnspan = 3, padx = (20, 20), pady = (20, 20),
-      sticky = "nsew" )
-
-
-    # append buttons|labels
+    # ELEMENTS
     #######################################
 
-    # title
+    # sidebar
     #############################
-    font = customtkinter.CTkFont( size = 20, weight = "bold" )
-    title_label = customtkinter.CTkLabel( frame_sidebar, text = "Bookkeeper", font = font )
-    title_label.grid( row = 0, column = 0, padx = 20, pady = (20, 10) )
+
+    # title
+    ###################
+    Elements.title( frame_sidebar, "Bookkeeper", 0, 0, 20, (20, 10) )
 
     # upload mutations
     #############################
-    sidebar_button_1 = customtkinter.CTkButton( frame_sidebar, text = "Upload CSV File",
-      command = csv_to_database )
-    sidebar_button_1.grid( row = 1, column = 0, padx = 20, pady = 10 )
+    Elements.button( frame_sidebar, "Bookkeeper", csv_to_database, 0, 1, 20, (20, 10) )
 
     # add categories to mutations
     #############################
@@ -176,57 +153,61 @@ class App( customtkinter.CTk ):
     # current saldo
     #############################
     content = "€ " + str( Database_Mutations.sum() )
-
-    font = customtkinter.CTkFont( size = 16, weight = "bold" )
-    month_label = customtkinter.CTkLabel( frame_sidebar, text = content, font = font )
-    month_label.grid( row = 5, column = 0, padx = 20, pady = (20, 10) )
+    Elements.header( frame_sidebar, content, 0, 2, 20, (20, 10) )
 
     # current month
     #############################
-    x = datetime.datetime.now()
-
     locale.setlocale( locale.LC_TIME, "nl_NL" )
 
-    font = customtkinter.CTkFont( size = 16, weight = "bold" )
-    month_label = customtkinter.CTkLabel( frame_sidebar, text = x.strftime( "%B %Y" ), font = font )
-    month_label.grid( row = 6, column = 0, padx = 20, pady = (20, 10) )
+    x = datetime.datetime.now()
+    content = x.strftime( "%B %Y" )
+    Elements.header( frame_sidebar, content, 0, 3, 20, (20, 10) )
+
+    # amounts
+    #######################################
 
     # totals
     #############################
-    button = customtkinter.CTkButton( frame_totals, text = "incidenteel",
-      fg_color = "transparent",
-      border_width = 1, text_color = ("gray10", "#DCE4EE"), command = add_categories )
-    button.grid( row = 1, column = 1, padx = (20, 10), pady = (20, 20),
-      sticky = "nsew" )
-
-    button = customtkinter.CTkButton( frame_totals, text = "€ -1562.75",
-      fg_color = "transparent",
-      border_width = 1, text_color = ("gray10", "#DCE4EE"), command = add_categories )
-    button.grid( row = 1, column = 2, padx = (10, 10), pady = (20, 20),
-      sticky = "nsew" )
-
-    button = customtkinter.CTkButton( frame_totals, text = "-10.8%",
-      fg_color = "transparent",
-      border_width = 1, text_color = ("gray10", "#DCE4EE"), command = add_categories )
-    button.grid( row = 1, column = 3, padx = (10, 20), pady = (20, 20), sticky = "nsew" )
+    Elements.button_inverse( frame_total, "incidenteel", add_categories, 0, 0, (20, 0), (20, 0) )
+    Elements.button_inverse( frame_total, "€ -1562.75", add_categories, 1, 0, (20, 0), (20, 0) )
+    Elements.button_inverse( frame_total, "-10.8%", add_categories, 2, 0, (20, 0), (20, 0) )
 
     # this month
     #############################
-    button = customtkinter.CTkButton( frame_month, text = "€ -65.25",
-      fg_color = "transparent",
-      border_width = 1, text_color = ("gray10", "#DCE4EE"), command = add_categories )
-    button.grid( row = 1, column = 1, padx = (20, 10), pady = (20, 20),
-      sticky = "nsew" )
 
-    button = customtkinter.CTkButton( frame_month, text = "-5.4%",
-      fg_color = "transparent",
-      border_width = 1, text_color = ("gray10", "#DCE4EE"), command = add_categories )
-    button.grid( row = 1, column = 2, padx = (10, 20), pady = (20, 20), sticky = "nsew" )
+    Elements.button_inverse( frame_month, "€ -65.25", add_categories, 0, 0, (20, 0), (20, 0) )
+    Elements.button_inverse( frame_month, "-5.4%", add_categories, 1, 0, (20, 0), (20, 0) )
 
     # create table
     #######################################
-    # categorie_table = customtkinter.CTkFrame( self, fg_color = "transparent" )
-    # categorie_table.grid( row = 0, column = 2, padx = (20, 20), pady = (20, 0), sticky = "nsew" )
+    Elements.header( frame_table, "date", 0, 0, (20, 0), (20, 0) )
+    Elements.header( frame_table, "product", 1, 0, (20, 0), (20, 0) )
+    Elements.header( frame_table, "category", 2, 0, (20, 0), (20, 0) )
+    Elements.header( frame_table, "amount", 3, 0, (20, 0), (20, 0) )
+
+    Elements.label( frame_table, "20221124", 0, 1, (20, 0), (20, 0) )
+    Elements.label( frame_table, "triplepro", 1, 1, (20, 0), (20, 0) )
+    Elements.label( frame_table, "salaris", 2, 1, (20, 0), (20, 0) )
+    Elements.label( frame_table, "2028.93", 3, 1, (20, 0), (20, 0) )
+
+    # graphs
+    #######################################
+
+    column = 0
+    for j in range( 8 ):
+      spacer = Elements.label( frame_graph, " ", column, 1, (20, 0), (20, 0) )
+      spacer.grid( rowspan = 2 )
+
+      header = Elements.header( frame_graph, "incidenteel", column + 1, 0, (2, 0), (20, 0) )
+      header.grid( columnspan = 12 )
+
+      column += 1
+      for i in range( 12 ):
+        progressbar = customtkinter.CTkProgressBar( frame_graph, orientation = "vertical" )
+        progressbar.grid( column = column, row = 1, padx = (1, 0), pady = 20, sticky = "ns" )
+        progressbar.set( i / 12 )
+        column += 1
+
 
 
 if __name__ == '__main__':
