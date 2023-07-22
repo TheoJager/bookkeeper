@@ -14,7 +14,7 @@ class Elements():
 
   @staticmethod
   def scroll( append: CTkBaseClass, column: int = 0, row: int = 0, columnspan: int = 1, rowspan: int = 1, padx: int = 0, pady: int = 0 ) -> CTkBaseClass:
-    return Elements.grid( CTkFrame( append ), column, row, columnspan, rowspan, padx, pady )
+    return Elements.grid( CTkScrollableFrame( append ), column, row, columnspan, rowspan, padx, pady )
 
   @staticmethod
   def title( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkBaseClass:

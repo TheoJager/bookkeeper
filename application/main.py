@@ -111,7 +111,8 @@ class App( customtkinter.CTk ):
     # configure window
     #######################################
     self.title( "Bookkeeper" )
-    self.geometry( f"{1600}x{580}" )
+    # self.geometry( f"{1800}x{800}" )
+    # self.attributes('-fullscreen', True)
 
     # configure grid layout (4x4)
     #######################################
@@ -142,7 +143,7 @@ class App( customtkinter.CTk ):
 
     # upload mutations
     #############################
-    Elements.button( frame_sidebar, "Bookkeeper", csv_to_database, 0, 1, 20, (20, 10) )
+    Elements.button( frame_sidebar, "Upload CSV", csv_to_database, 0, 1, 20, (20, 10) )
 
     # add categories to mutations
     #############################
@@ -168,27 +169,40 @@ class App( customtkinter.CTk ):
 
     # totals
     #############################
-    Elements.button_inverse( frame_total, "incidenteel", add_categories, 0, 0, (20, 0), (20, 0) )
-    Elements.button_inverse( frame_total, "€ -1562.75", add_categories, 1, 0, (20, 0), (20, 0) )
-    Elements.button_inverse( frame_total, "-10.8%", add_categories, 2, 0, (20, 0), (20, 0) )
+
+    row = 0
+    categories = Database_Categories.select()
+    for category in categories:
+      Elements.button_inverse( frame_total, category[ "ctr_name" ], add_categories, 0, row, (20, 0), (20, 0) ).configure( anchor = "w" )
+      Elements.button_inverse( frame_total, "€ " + Database_Mutations.sum_category( category[ "ctr_id" ] ), add_categories, 1, row, (20, 0), (20, 0) ).configure( anchor = "w" )
+      Elements.button_inverse( frame_total, "-10.8%", add_categories, 2, row, (20, 20), (20, 0) ).configure( width = 100 )
+      row += 1
+
+    Elements.label( frame_total, "", 0, row + 1, (20, 0), (20, 0) )
 
     # this month
     #############################
 
-    Elements.button_inverse( frame_month, "€ -65.25", add_categories, 0, 0, (20, 0), (20, 0) )
-    Elements.button_inverse( frame_month, "-5.4%", add_categories, 1, 0, (20, 0), (20, 0) )
+    row = 0
+    for category in categories:
+      Elements.button_inverse( frame_month, "€ " + Database_Mutations.sum_category_month( category[ "ctr_id" ] ), add_categories, 1, row, (20, 0), (20, 0) ).configure( anchor = "w" )
+      Elements.button_inverse( frame_month, "-10.8%", add_categories, 2, row, (20, 20), (20, 0) ).configure( width = 100 )
+      row += 1
 
     # create table
     #######################################
     Elements.header( frame_table, "date", 0, 0, (20, 0), (20, 0) )
     Elements.header( frame_table, "product", 1, 0, (20, 0), (20, 0) )
     Elements.header( frame_table, "category", 2, 0, (20, 0), (20, 0) )
-    Elements.header( frame_table, "amount", 3, 0, (20, 0), (20, 0) )
+    Elements.header( frame_table, "amount", 3, 0, (20, 20), (20, 0) )
 
-    Elements.label( frame_table, "20221124", 0, 1, (20, 0), (20, 0) )
-    Elements.label( frame_table, "triplepro", 1, 1, (20, 0), (20, 0) )
-    Elements.label( frame_table, "salaris", 2, 1, (20, 0), (20, 0) )
-    Elements.label( frame_table, "2028.93", 3, 1, (20, 0), (20, 0) )
+    frame_table_data = Elements.scroll( frame_table, 0, 1, 5, 4, 0, 0 )
+    frame_table_data.configure( height = 500 )
+
+    Elements.label( frame_table_data, "20221124", 0, 1, (20, 0), (20, 0) )
+    Elements.label( frame_table_data, "triplepro", 1, 1, (20, 0), (20, 0) )
+    Elements.label( frame_table_data, "salaris", 2, 1, (20, 0), (20, 0) )
+    Elements.label( frame_table_data, "2028.93", 3, 1, (20, 0), (20, 0) )
 
     # graphs
     #######################################
@@ -207,7 +221,6 @@ class App( customtkinter.CTk ):
         progressbar.grid( column = column, row = 1, padx = (1, 0), pady = 20, sticky = "ns" )
         progressbar.set( i / 12 )
         column += 1
-
 
 
 if __name__ == '__main__':
