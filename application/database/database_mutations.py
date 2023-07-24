@@ -1,4 +1,3 @@
-import locale
 import datetime
 
 from typing import Dict
@@ -12,11 +11,12 @@ class Database_Mutations:
     sql = """
       CREATE TABLE IF NOT EXISTS mutations (
         mts_id integer primary key, 
-        mts_date text, 
+        mts_date integer, 
         mts_amount real, 
+        mts_start real, 
         mts_category integer, 
         mts_description text,
-        UNIQUE(mts_date,mts_amount,mts_description)
+        UNIQUE(mts_date,mts_amount,mts_start,mts_description)
       )
     """
     Database.query( sql )
@@ -34,26 +34,13 @@ class Database_Mutations:
 
   @staticmethod
   def insert( record: Dict ):
-    sql = "INSERT INTO mutations(mts_date, mts_amount, mts_description, mts_category) VALUES(:mts_date, :mts_amount, :mts_description, :mts_category)"
-    execute = {
-      "mts_date"       : record[ "mts_date" ],
-      "mts_amount"     : Database_Mutations.convert_numbers( record[ "mts_amount" ] ),
-      "mts_description": record[ "mts_description" ],
-      "mts_category"   : record[ "mts_category" ],
-    }
-    Database.query( sql, execute )
+    sql = "INSERT INTO mutations(mts_date, mts_amount, mts_start, mts_description, mts_category) VALUES(:mts_date, :mts_amount, :mts_start, :mts_description, :mts_category)"
+    Database.query( sql, record )
 
   @staticmethod
   def update( record: Dict ):
     sql = "UPDATE mutations SET mts_date = :mts_date, mts_amount = :mts_amount, mts_description = :mts_description, mts_category = :mts_category WHERE mts_id = :mts_id"
-    execute = {
-      "mts_id"         : record[ "mts_id" ],
-      "mts_date"       : record[ "mts_date" ],
-      "mts_amount"     : Database_Mutations.convert_numbers( record[ "mts_amount" ] ),
-      "mts_description": record[ "mts_description" ],
-      "mts_category"   : record[ "mts_category" ],
-    }
-    Database.query( sql, execute )
+    Database.query( sql, record )
 
   @staticmethod
   def delete( id: int ):
@@ -62,15 +49,16 @@ class Database_Mutations:
     Database.query( sql, execute )
 
   @staticmethod
-  def sum() -> int:
+  def sum() -> float:
     sql = "select sum(mts_amount) as mts_total from mutations"
 
-    mts_total = Database.query( sql )
+    mts = Database.query( sql )
 
-    return mts_total[ 0 ][ "mts_total" ]
+    mts_total = mts[ 0 ][ "mts_total" ]
+    return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
-  def sum_category( category: int ) -> str:
+  def sum_category_year( category: int ) -> float:
     last_year = datetime.datetime.now() - datetime.timedelta( days = 365 )
 
     mts_date = last_year.strftime( "%Y%m01" )
@@ -79,18 +67,14 @@ class Database_Mutations:
     execute = { "mts_category": category, "mts_date": mts_date }
     mts_total = Database.query( sql, execute )
 
-    return str( round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 ) )
+    return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
 
   @staticmethod
-  def sum_category_month( category: int ) -> str:
+  def sum_category_month( category: int ) -> float:
     mts_date = datetime.datetime.now().strftime( "%Y%m01" )
 
     sql = "select sum(mts_amount) as mts_total from mutations WHERE mts_category = :mts_category AND mts_date >= :mts_date"
     execute = { "mts_category": category, "mts_date": mts_date }
     mts_total = Database.query( sql, execute )
 
-    return str( round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 ) )
-
-  @staticmethod
-  def convert_numbers( number: str ):
-    return number.replace( ",", "." )
+    return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )

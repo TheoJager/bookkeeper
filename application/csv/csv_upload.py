@@ -1,5 +1,6 @@
 import re
 import csv
+from random import randrange
 
 from tkinter import filedialog
 
@@ -27,15 +28,19 @@ def csv_to_records( path: str ) -> list:
   for row in csv.DictReader( csv_file, delimiter = delimiter ):
     records.append( {
       'mts_date'       : row[ 'Transactiedatum' ],
-      'mts_amount'     : row[ 'Transactiebedrag' ],
+      'mts_amount'     : csv_convert_numbers( row[ 'Transactiebedrag' ] ),
+      'mts_start'      : csv_convert_numbers( row[ 'Beginsaldo' ] ),
       'mts_description': row[ 'Omschrijving' ],
-      'mts_start'      : row[ 'Beginsaldo' ],
-      'mts_category'   : 0
+      'mts_category'   : randrange(1, 9)
     } )
 
   csv_file.close()
 
   return records
+
+
+def csv_convert_numbers( number: str ):
+  return number.replace( ",", "." )
 
 
 def csv_get_filename() -> str:
