@@ -28,7 +28,7 @@ class Elements():
 
   @staticmethod
   def label( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkBaseClass:
-    elements = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 14 ) ), column, row, 1, 1, padx, pady )
+    elements = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 13 ) ), column, row, 1, 1, padx, pady )
     elements.grid( sticky = "nsw" )
     return elements
 

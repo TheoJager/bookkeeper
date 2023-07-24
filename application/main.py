@@ -19,12 +19,6 @@ from application.database.database_categories import Database_Categories
 #######################################
 # pyinstaller --onefile --noconsole --icon=favicon.ico main.py
 
-# CONSTANTS
-#######################################
-
-W20 = (20, 0)
-CATEGORY_INCOME = 8
-
 # CATEGORIE
 # initialize categories
 #######################################
@@ -46,6 +40,13 @@ for cat_record in cat_records:
     Database_Categories.insert( cat_record )
   except sqlite3.IntegrityError:
     break
+
+# CONSTANTS
+#######################################
+
+W20 = (20, 0)
+CATEGORY_INCOME = 8
+CATEGORIES = Database_Categories.select()
 
 # IMPORT EXCEL
 # create database
@@ -200,8 +201,7 @@ class App( customtkinter.CTk ):
     self.element_total = { }
 
     row = 0
-    categories = Database_Categories.select()
-    for category in categories:
+    for category in CATEGORIES:
       Elements.button_inverse( frame_total, category[ "ctr_name" ], add_categories, 0, row, W20, W20 ).configure( anchor = "w" )
       s = Elements.button_inverse( frame_total, "€ 0.00", add_categories, 1, row, W20, W20 )
       p = Elements.button_inverse( frame_total, "0.00 %", add_categories, 2, row, W20, W20 )
@@ -217,8 +217,7 @@ class App( customtkinter.CTk ):
     def calculate_total():
       sum_income_year = Database_Mutations.sum_category_year( CATEGORY_INCOME )
 
-      categories = Database_Categories.select()
-      for category in categories:
+      for category in CATEGORIES:
         sum_category = Database_Mutations.sum_category_year( category[ "ctr_id" ] )
         percent_category = "0.00" if sum_income_year == 0 else str( round( (sum_category / sum_income_year) * 100, 1 ) )
 
@@ -226,13 +225,12 @@ class App( customtkinter.CTk ):
         s.configure( text = "€ " + str( sum_category ) )
         p.configure( text = str( percent_category ) + " %" )
 
-
     # this month
     #############################
     self.element_month = { }
 
     row = 0
-    for category in categories:
+    for category in CATEGORIES:
       s = Elements.button_inverse( frame_month, "€ 0.00", add_categories, 1, row, W20, W20 )
       p = Elements.button_inverse( frame_month, "0.00 %", add_categories, 2, row, (20, 20), W20 )
 
@@ -245,7 +243,7 @@ class App( customtkinter.CTk ):
     def calculate_month():
       sum_income_month = Database_Mutations.sum_category_month( CATEGORY_INCOME )
 
-      for category in categories:
+      for category in CATEGORIES:
         sum_category_month = Database_Mutations.sum_category_month( category[ "ctr_id" ] )
         percent_category = "0.00" if sum_income_month == 0 else str( round( (sum_category_month / sum_income_month) * 100, 1 ) )
 
@@ -268,19 +266,34 @@ class App( customtkinter.CTk ):
     # graphs
     #######################################
 
-    column = 0
-    for j in range( 8 ):
-      spacer = Elements.label( frame_graph, " ", column, 1, W20, W20 )
-      spacer.grid( rowspan = 2 )
-
-      header = Elements.header( frame_graph, "incidenteel", column + 1, 0, (2, 0), W20 )
+    def create_graph_header( column: int, name: str ):
+      header = Elements.header( frame_graph, name, column, 0, (2, 0), W20 )
       header.grid( columnspan = 12 )
 
+    def create_graph_bars( column: int, i: int ):
+      progressbar = customtkinter.CTkProgressBar( frame_graph, orientation = "vertical" )
+      progressbar.grid( column = column, row = 1, padx = (1, 0), pady = 20, sticky = "ns" )
+      progressbar.set( i / 12 )
+
+    column = 0
+
+    spacer = Elements.label( frame_graph, " ", column, 1, W20, W20 )
+    spacer.grid( rowspan = 2 )
+
+    column += 1
+
+    # create_graph_header( column, "total" )
+    # for i in range( 12 ):
+    #   create_graph_bars( column, i )
+    #   column += 1
+    #
+    # column += 1
+
+    for category in CATEGORIES:
+      create_graph_header( column, category[ "ctr_name" ] )
       column += 1
       for i in range( 12 ):
-        progressbar = customtkinter.CTkProgressBar( frame_graph, orientation = "vertical" )
-        progressbar.grid( column = column, row = 1, padx = (1, 0), pady = 20, sticky = "ns" )
-        progressbar.set( i / 12 )
+        create_graph_bars( column, i )
         column += 1
 
     # recalculate
