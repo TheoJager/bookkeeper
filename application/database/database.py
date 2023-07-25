@@ -15,7 +15,6 @@ class Database:
   @staticmethod
   def query(sql: str, variables: Dict = None) -> list:
     db = sqlite3.connect('bookkeeper.db')
-    # db.row_factory = sqlite3.Row
     db.row_factory = Database.dict_factory
 
     cursor = db.cursor()

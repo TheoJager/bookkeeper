@@ -8,7 +8,7 @@ from application.ui.elements import Elements
 ELEMENT_TABLES = {}
 
 
-# FUNCTIONS
+# CLASS
 #######################################
 
 def create_table_headers(append: CTkFrame):

@@ -3,12 +3,12 @@ import customtkinter
 from application.constants import W20
 from application.ui.elements import Elements
 from application.csv.csv_upload import csv_to_database
-from application.view.bank import update_bank_total, create_bank_total
-from application.view.year import calculate_total, create_total
-from application.view.graph import create_graph
-from application.view.month import create_month, calculate_month
+from application.view.bank import View_Bank
+from application.view.year import View_Year
+from application.view.graph import View_Graph
+from application.view.month import View_Month
 from application.view.table import create_table_headers, create_table_rows
-from application.view.navigation import create_element_date, create_navigation, update_month
+from application.view.navigation import Navigation
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 
@@ -47,10 +47,11 @@ customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "gr
 #############################
 
 def recalculate():
-  update_bank_total()
-  update_month()
-  calculate_total()
-  calculate_month()
+  Navigation.update()
+  View_Bank.update()
+  View_Year.update()
+  View_Month.update()
+  View_Graph.update()
 
 
 class Bookkeeper(customtkinter.CTk):
@@ -108,13 +109,13 @@ class Bookkeeper(customtkinter.CTk):
     # month navigation
     #############################
     
-    create_element_date(frame_sidebar, 0, 3)
-    create_navigation(frame_sidebar, 0, 4)
+    Navigation.create_element_date(frame_sidebar, 0, 3)
+    Navigation.create_navigation(frame_sidebar, 0, 4)
 
     # current bank total
     #############################
 
-    create_bank_total(frame_sidebar, 0, 5)
+    View_Bank.create(frame_sidebar, 0, 5)
 
     # amounts
     #######################################
@@ -122,12 +123,12 @@ class Bookkeeper(customtkinter.CTk):
     # totals
     #############################
     
-    create_total(frame_total)
+    View_Year.create(frame_total)
 
     # this month
     #############################
     
-    create_month(frame_month)
+    View_Month.create(frame_month)
 
     # create table
     #######################################
@@ -138,7 +139,7 @@ class Bookkeeper(customtkinter.CTk):
     # graphs
     #######################################
     
-    create_graph(frame_graph)
+    View_Graph.create(frame_graph)
 
     # recalculate
     #######################################
