@@ -1,8 +1,11 @@
 import re
 import csv
-from random import randrange
+import sqlite3
 
+from random import randrange
 from tkinter import filedialog
+from application.message.message import Message
+from application.database.database_mutations import Database_Mutations
 
 
 def csv_get_header( path: str ) -> str:
@@ -37,6 +40,19 @@ def csv_to_records( path: str ) -> list:
   csv_file.close()
 
   return records
+
+
+def csv_to_database():
+  filename = csv_get_filename()
+  if len(filename):
+    records = csv_to_records(filename)
+    Database_Mutations.insert_base_value(records[0])
+    for record in records:
+      try:
+        Database_Mutations.insert(record)
+      except sqlite3.IntegrityError:
+        continue
+    Message.ok('result', 'import successful')
 
 
 def csv_convert_numbers( number: str ):

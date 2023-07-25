@@ -1,3 +1,5 @@
+import sqlite3
+
 from typing import Dict
 from application.database.database import Database
 
@@ -16,6 +18,24 @@ class Database_Categories:
       )
     """
     Database.query(sql)
+
+  @staticmethod
+  def create_default_records():
+    cat_records = [
+      {'ctr_income': 0, 'ctr_sequence': 1, 'ctr_name': 'Incidenteel'},
+      {'ctr_income': 0, 'ctr_sequence': 2, 'ctr_name': 'Eten'},
+      {'ctr_income': 0, 'ctr_sequence': 3, 'ctr_name': 'Boodschappen'},
+      {'ctr_income': 0, 'ctr_sequence': 4, 'ctr_name': 'Abonnementen'},
+      {'ctr_income': 0, 'ctr_sequence': 5, 'ctr_name': 'Kosten'},
+      {'ctr_income': 0, 'ctr_sequence': 6, 'ctr_name': 'Sparen'},
+      {'ctr_income': 0, 'ctr_sequence': 7, 'ctr_name': 'Beleggingen'},
+      {'ctr_income': 1, 'ctr_sequence': 8, 'ctr_name': 'Salaris'},
+    ]
+    for cat_record in cat_records:
+      try:
+        Database_Categories.insert(cat_record)
+      except sqlite3.IntegrityError:
+        break
 
   @staticmethod
   def select() -> list:
