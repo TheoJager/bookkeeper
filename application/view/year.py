@@ -1,5 +1,4 @@
 from customtkinter import CTkFrame
-
 from application.ui.elements import Elements
 from application.constants import W20, CATEGORY_INCOME
 from application.categories.categories import add_categories
@@ -8,7 +7,11 @@ from application.database.database_categories import Database_Categories
 
 # GLOBALS
 #######################################
+
 ELEMENT_TOTAL = {}
+
+# FUNCTIONS
+#######################################
 
 def create_total(append: CTkFrame):
   row = 0

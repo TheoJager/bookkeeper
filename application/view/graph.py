@@ -3,6 +3,13 @@ from application.constants import W20
 from application.ui.elements import Elements
 from application.database.database_categories import Database_Categories
 
+# GLOBALS
+#######################################
+
+ELEMENT_GRAPH = {}
+
+# FUNCTIONS
+#######################################
 
 def create_graph_header(append: CTkFrame, column: int, name: str):
   header = Elements.header(append, name, column, 0, (2, 0), W20)
