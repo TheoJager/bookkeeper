@@ -2,6 +2,7 @@ from customtkinter import CTkFrame, CTkLabel
 from application.constants import W20
 from application.ui.elements import Elements
 from application.database.database_mutations import Database_Mutations
+from functions import format_amount
 
 # GLOBALS
 #######################################
@@ -24,8 +25,4 @@ class View_Bank:
   def update():
     global ELEMENT_BANK_TOTAL
 
-    ELEMENT_BANK_TOTAL.configure( text = View_Bank.format_amount( Database_Mutations.sum() ) )
-
-  @staticmethod
-  def format_amount( amount: float ):
-    return "€ {:.2f}".format( amount )
+    ELEMENT_BANK_TOTAL.configure( text = "€ " + format_amount( Database_Mutations.sum() ) )

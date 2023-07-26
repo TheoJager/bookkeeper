@@ -4,6 +4,7 @@ from application.constants import W20, CATEGORY_INCOME
 from application.categories.categories import paint_category_year
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
+from functions import format_amount, format_percentage
 
 # GLOBALS
 #######################################
@@ -42,17 +43,9 @@ class View_Year:
       percent = View_Year.calculate_percentage( current, income )
 
       s, p = ELEMENT_VIEW_TOTAL[ category[ "ctr_name" ] ]
-      s.configure( text = View_Year.format_amount( current ) )
-      p.configure( text = View_Year.format_percentage( percent ) )
+      s.configure( text = format_amount( current ) )
+      p.configure( text = format_percentage( percent ) )
 
   @staticmethod
   def calculate_percentage( amount, income ) -> float:
     return 0 if income == 0 else round( (amount / income) * 100, 1 )
-
-  @staticmethod
-  def format_amount( amount: float ):
-    return "{:.2f}".format( amount )
-
-  @staticmethod
-  def format_percentage( percentage: float ):
-    return "{:.1f}".format( percentage )

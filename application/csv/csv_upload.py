@@ -34,7 +34,7 @@ def csv_to_records( path: str ) -> list:
       'mts_amount'     : csv_convert_numbers( row[ 'Transactiebedrag' ] ),
       'mts_start'      : csv_convert_numbers( row[ 'Beginsaldo' ] ),
       'mts_description': row[ 'Omschrijving' ],
-      'mts_category'   : randrange( 1, 9 )
+      'ctr_id'   : randrange( 1, 9 )
     } )
 
   csv_file.close()

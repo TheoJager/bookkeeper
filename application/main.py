@@ -7,7 +7,7 @@ from application.view.bank import View_Bank
 from application.view.year import View_Year
 from application.view.graph import View_Graph
 from application.view.month import View_Month
-from application.view.table import create_table_headers, create_table_rows
+from application.view.table import View_Table
 from application.view.navigation import Navigation
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
@@ -96,9 +96,6 @@ class Bookkeeper( customtkinter.CTk ):
     frame_total = Elements.frame( self, 1, 0, 1, 1, W20, W20 )
     frame_month = Elements.frame( self, 2, 0, 1, 1, W20, W20 )
     frame_table = Elements.frame( self, 3, 0, 1, 2, 20, 20 )
-    frame_table_data = Elements.scroll( frame_table, 0, 1, 5, 4, 0, 0 )
-    frame_table_data.configure( fg_color = "transparent" )
-
     frame_graph = Elements.frame( self, 1, 1, 2, 1, W20, 20 )
 
     # ELEMENTS
@@ -146,8 +143,7 @@ class Bookkeeper( customtkinter.CTk ):
     # create table
     #######################################
 
-    create_table_headers( frame_table )
-    create_table_rows( frame_table_data )
+    View_Table.create_headers( frame_table )
 
     # graphs
     #######################################

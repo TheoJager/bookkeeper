@@ -1,9 +1,10 @@
 from customtkinter import CTkFrame
 from application.ui.elements import Elements
 from application.constants import W20, CATEGORY_INCOME
-from application.categories.categories import paint_category_month
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
+from application.view.table import View_Table
+from functions import format_amount, format_percentage
 
 # GLOBALS
 #######################################
@@ -20,11 +21,12 @@ class View_Month:
   def create( append: CTkFrame ):
     row = 0
     for category in Database_Categories.select():
+      ctr_id = category[ "ctr_id" ]
       Elements.label( append, "€", 1, row, W20, W20 )
       s = Elements.label( append, "0.00", 2, row, (10, 0), W20 )
       p = Elements.label( append, "0.00", 3, row, (10, 0), W20 )
       Elements.label( append, "%", 4, row, (10, 10), W20 )
-      Elements.button( append, "@", paint_category_month, 5, row, (20, 20), W20 ).configure( width = 25 )
+      Elements.button( append, "@", lambda ctr_id = ctr_id: View_Table.update_rows( ctr_id ), 5, row, (20, 20), W20 ).configure( width = 25 )
 
       s.configure( anchor = "e", width = 60 )
       p.configure( anchor = "e", width = 60 )
@@ -41,17 +43,9 @@ class View_Month:
       percent = View_Month.calculate_percentage( current, income )
 
       s, p = ELEMENT_VIEW_MONTH[ category[ "ctr_name" ] ]
-      s.configure( text = View_Month.format_amount( current ) )
-      p.configure( text = View_Month.format_percentage( percent ) )
+      s.configure( text = format_amount( current ) )
+      p.configure( text = format_percentage( percent ) )
 
   @staticmethod
   def calculate_percentage( amount, income ) -> float:
     return 0 if income == 0 else round( (amount / income) * 100, 1 )
-
-  @staticmethod
-  def format_amount( amount: float ):
-    return "{:.2f}".format( amount )
-
-  @staticmethod
-  def format_percentage( percentage: float ):
-    return "{:.1f}".format( percentage )

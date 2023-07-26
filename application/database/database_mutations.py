@@ -1,6 +1,7 @@
 import datetime
 
 from typing import Dict
+from date.date import date
 from application.database.database import Database
 
 
@@ -14,7 +15,7 @@ class Database_Mutations:
         mts_date integer, 
         mts_amount real, 
         mts_start real, 
-        mts_category integer, 
+        ctr_id integer, 
         mts_description text,
         UNIQUE(mts_date,mts_amount,mts_start,mts_description)
       )
@@ -34,12 +35,12 @@ class Database_Mutations:
 
   @staticmethod
   def insert( record: Dict ):
-    sql = "INSERT INTO mutations(mts_date, mts_amount, mts_start, mts_description, mts_category) VALUES(:mts_date, :mts_amount, :mts_start, :mts_description, :mts_category)"
+    sql = "INSERT INTO mutations(mts_date, mts_amount, mts_start, mts_description, ctr_id) VALUES(:mts_date, :mts_amount, :mts_start, :mts_description, :ctr_id)"
     Database.query( sql, record )
 
   @staticmethod
   def update( record: Dict ):
-    sql = "UPDATE mutations SET mts_date = :mts_date, mts_amount = :mts_amount, mts_description = :mts_description, mts_category = :mts_category WHERE mts_id = :mts_id"
+    sql = "UPDATE mutations SET mts_date = :mts_date, mts_amount = :mts_amount, mts_description = :mts_description, ctr_id = :ctr_id WHERE mts_id = :mts_id"
     Database.query( sql, record )
 
   @staticmethod
@@ -56,7 +57,7 @@ class Database_Mutations:
         'mts_amount'     : record[ 'mts_start' ],
         'mts_start'      : 0,
         'mts_description': 'start',
-        'mts_category'   : 8,
+        'ctr_id'   : 8,
       } )
 
   @staticmethod
@@ -74,18 +75,60 @@ class Database_Mutations:
 
     mts_date = last_year.strftime( "%Y%m01" )
 
-    sql = "select sum(mts_amount) as mts_total from mutations WHERE mts_category = :mts_category AND mts_date >= :mts_date"
-    execute = { "mts_category": category, "mts_date": mts_date }
+    sql = "select sum(mts_amount) as mts_total from mutations WHERE ctr_id = :ctr_id AND mts_date >= :mts_date"
+    execute = { "ctr_id": category, "mts_date": mts_date }
     mts_total = Database.query( sql, execute )
 
     return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
 
   @staticmethod
   def sum_category_month( category: int ) -> float:
-    mts_date = datetime.datetime.now().strftime( "%Y%m01" )
+    x = datetime.datetime.now()
+    month = int( x.strftime( "%m" ) )
 
-    sql = "select sum(mts_amount) as mts_total from mutations WHERE mts_category = :mts_category AND mts_date >= :mts_date"
-    execute = { "mts_category": category, "mts_date": mts_date }
+    x = datetime.datetime.now()
+    year = int( x.strftime( "%Y" ) )
+
+    mts_date_start= date(year, month, 1)
+    mts_date_end= date(year, month + 1, 1)
+
+    sql = """
+      SELECT 
+        sum(mts_amount) as mts_total
+      FROM 
+        mutations 
+      WHERE ctr_id = :ctr_id 
+        AND mts_date >= :mts_date_start 
+        AND mts_date <  :mts_date_end
+      ORDER BY 
+        mts_date DESC
+    """
+
+    execute = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
     mts_total = Database.query( sql, execute )
 
     return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
+
+  @staticmethod
+  def select_category_month( category: int, month: int ) -> list:
+    x = datetime.datetime.now()
+    year = int( x.strftime( "%Y" ) )
+
+    mts_date_start= date(year, month, 1)
+    mts_date_end= date(year, month + 1, 1)
+
+    sql = """
+      SELECT 
+        ctr_name, 
+        mutations.*
+      FROM 
+        mutations 
+        LEFT JOIN categories USING(ctr_id)
+      WHERE ctr_id = :ctr_id 
+        AND mts_date >= :mts_date_start 
+        AND mts_date <  :mts_date_end
+      ORDER BY 
+        mts_date DESC
+    """
+    execute = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
+    return Database.query( sql, execute )

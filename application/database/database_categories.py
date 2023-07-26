@@ -22,14 +22,14 @@ class Database_Categories:
   @staticmethod
   def create_default_records():
     cat_records = [
-      { 'ctr_income': 0, 'ctr_sequence': 1, 'ctr_name': 'Incidenteel' },
-      { 'ctr_income': 0, 'ctr_sequence': 2, 'ctr_name': 'Eten' },
-      { 'ctr_income': 0, 'ctr_sequence': 3, 'ctr_name': 'Boodschappen' },
-      { 'ctr_income': 0, 'ctr_sequence': 4, 'ctr_name': 'Abonnementen' },
-      { 'ctr_income': 0, 'ctr_sequence': 5, 'ctr_name': 'Kosten' },
-      { 'ctr_income': 0, 'ctr_sequence': 6, 'ctr_name': 'Sparen' },
-      { 'ctr_income': 0, 'ctr_sequence': 7, 'ctr_name': 'Beleggingen' },
-      { 'ctr_income': 1, 'ctr_sequence': 8, 'ctr_name': 'Salaris' },
+      { 'ctr_income': 0, 'ctr_sequence': 1, 'ctr_name': 'incidenteel' },
+      { 'ctr_income': 0, 'ctr_sequence': 2, 'ctr_name': 'eten' },
+      { 'ctr_income': 0, 'ctr_sequence': 3, 'ctr_name': 'boodschappen' },
+      { 'ctr_income': 0, 'ctr_sequence': 4, 'ctr_name': 'abonnementen' },
+      { 'ctr_income': 0, 'ctr_sequence': 5, 'ctr_name': 'kosten' },
+      { 'ctr_income': 0, 'ctr_sequence': 6, 'ctr_name': 'sparen' },
+      { 'ctr_income': 0, 'ctr_sequence': 7, 'ctr_name': 'beleggingen' },
+      { 'ctr_income': 1, 'ctr_sequence': 8, 'ctr_name': 'salaris' },
     ]
     for cat_record in cat_records:
       try:
