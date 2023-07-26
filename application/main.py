@@ -21,17 +21,6 @@ from application.database.database_categories import Database_Categories
 #######################################
 # pyinstaller --onefile --noconsole --icon=favicon.ico main.py
 
-# DATABASE CATEGORIES
-#######################################
-
-Database_Categories.create_table_if_not_exists()
-Database_Categories.create_default_records()
-
-# DATABASE MUTATIONS
-#######################################
-
-Database_Mutations.create_table_if_not_exists()
-
 # @TODO bedragen deze maand
 # @TODO aanklikbare staven
 # @TODO overzicht deze maand
@@ -39,11 +28,22 @@ Database_Mutations.create_table_if_not_exists()
 # @TODO overzicht categorie dit jaar
 #######################################
 
-customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
+# DATABASE SETUP
+#######################################
+
+Database_Categories.create_table_if_not_exists()
+Database_Categories.create_default_records()
+
+Database_Mutations.create_table_if_not_exists()
+
+# SETTINGS
+#######################################
+
+customtkinter.set_appearance_mode( "System" )  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_default_color_theme( "green" )  # Themes: "blue" (standard), "green", "dark-blue"
 
 
-# recalculate
+# RECALCULATE
 #############################
 
 def recalculate():
@@ -54,39 +54,52 @@ def recalculate():
   View_Graph.update()
 
 
-class Bookkeeper(customtkinter.CTk):
-  def __init__(self):
+class Bookkeeper( customtkinter.CTk ):
+  def __init__( self ):
     super().__init__()
 
     # configure window
     #######################################
 
-    self.title("Bookkeeper")
-    # self.geometry( f"{1800}x{800}" )
+    self.title( "Bookkeeper" )
     # self.attributes('-fullscreen', True)
+
+    w = 1600  # width for the Tk root
+    h = 800  # height for the Tk root
+
+    # get screen width and height
+    ws = self.winfo_screenwidth()  # width of the screen
+    hs = self.winfo_screenheight()  # height of the screen
+
+    # calculate x and y coordinates for the Tk root window
+    x = (ws - w) / 2
+    y = (hs - h) / 4
+
+    # set the dimensions of the screen
+    # and where it is placed
+    self.geometry( '%dx%d+%d+%d' % (w, h, x, y) )
 
     # configure grid layout (4x4)
     #######################################
 
-    self.grid_columnconfigure((1, 4), weight=3, minsize=400)
-    self.grid_columnconfigure((2, 3), weight=1)
-    self.grid_rowconfigure((0, 1), weight=1)
+    self.grid_columnconfigure( 0, weight = 1, minsize = 250 ) # sidebar
+    self.grid_columnconfigure( 1, weight = 2, minsize = 600 ) # amount year
+    self.grid_columnconfigure( 2, weight = 1, minsize = 400 ) # amount month
+    self.grid_columnconfigure( 3, weight = 1, minsize = 350 ) # table
+    self.grid_rowconfigure( (0, 1), weight = 1 )
 
     # FRAMES
     #############################
 
-    frame_sidebar = Elements.frame(self, 0, 0, 1, 4, W20, 20)
+    frame_sidebar = Elements.frame( self, 0, 0, 1, 4, W20, 20 )
 
-    frame_total = Elements.frame(self, 1, 0, 1, 1, W20, W20)
-    frame_month = Elements.frame(self, 2, 0, 1, 1, W20, W20)
+    frame_total = Elements.frame( self, 1, 0, 1, 1, W20, W20 )
+    frame_month = Elements.frame( self, 2, 0, 1, 1, W20, W20 )
+    frame_table = Elements.frame( self, 3, 0, 1, 2, 20, 20 )
+    frame_table_data = Elements.scroll( frame_table, 0, 1, 5, 4, 0, 0 )
+    frame_table_data.configure(fg_color="transparent")
 
-    frame_space = Elements.frame(self, 3, 0, 1, 1, W20, W20)
-    frame_space.configure(fg_color="transparent")
-
-    frame_table = Elements.frame(self, 4, 0, 1, 2, 20, 20)
-    frame_table_data = Elements.scroll(frame_table, 0, 1, 5, 4, 0, 0)
-
-    frame_graph = Elements.frame(self, 1, 1, 3, 1, W20, 20)
+    frame_graph = Elements.frame( self, 1, 1, 2, 1, W20, 20 )
 
     # ELEMENTS
     #######################################
@@ -96,54 +109,54 @@ class Bookkeeper(customtkinter.CTk):
 
     # title
     ###################
-    
-    Elements.title(frame_sidebar, "Bookkeeper", 0, 0, W20, W20)
+
+    Elements.title( frame_sidebar, "Bookkeeper", 0, 0, W20, W20 )
 
     # upload mutations
     #############################
-    
-    Elements.button(frame_sidebar, "Upload CSV", csv_to_database, 0, 1, 20, W20)
-    Elements.button(frame_sidebar, "Refresh", recalculate, 0, 2, 20, W20)
+
+    Elements.button( frame_sidebar, "Upload CSV", csv_to_database, 0, 1, 20, W20 )
+    Elements.button( frame_sidebar, "Refresh", recalculate, 0, 2, 20, W20 )
 
     # current month
     # month navigation
     #############################
-    
-    Navigation.create_element_date(frame_sidebar, 0, 3)
-    Navigation.create_navigation(frame_sidebar, 0, 4)
+
+    Navigation.create_element_date( frame_sidebar, 0, 3 )
+    Navigation.create_navigation( frame_sidebar, 0, 4 )
 
     # current bank total
     #############################
 
-    View_Bank.create(frame_sidebar, 0, 5)
+    View_Bank.create( frame_sidebar, 0, 5 )
 
     # amounts
     #######################################
 
     # totals
     #############################
-    
-    View_Year.create(frame_total)
+
+    View_Year.create( frame_total )
 
     # this month
     #############################
-    
-    View_Month.create(frame_month)
+
+    View_Month.create( frame_month )
 
     # create table
     #######################################
-    
-    create_table_headers(frame_table)
-    create_table_rows(frame_table_data)
+
+    create_table_headers( frame_table )
+    create_table_rows( frame_table_data )
 
     # graphs
     #######################################
-    
-    View_Graph.create(frame_graph)
+
+    View_Graph.create( frame_graph )
 
     # recalculate
     #######################################
-    
+
     recalculate()
 
 

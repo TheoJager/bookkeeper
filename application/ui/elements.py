@@ -22,7 +22,7 @@ class Elements:
 
   @staticmethod
   def header( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkLabel:
-    elements = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 16, weight = "bold" ) ), column, row, 1, 1, padx, pady )
+    elements = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 13, weight = "bold" ) ), column, row, 1, 1, padx, pady )
     elements.grid( sticky = "nsw" )
     return elements
 
