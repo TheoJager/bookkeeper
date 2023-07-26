@@ -82,10 +82,10 @@ class Bookkeeper( customtkinter.CTk ):
     # configure grid layout (4x4)
     #######################################
 
-    self.grid_columnconfigure( 0, weight = 1, minsize = 250 ) # sidebar
-    self.grid_columnconfigure( 1, weight = 2, minsize = 600 ) # amount year
-    self.grid_columnconfigure( 2, weight = 1, minsize = 400 ) # amount month
-    self.grid_columnconfigure( 3, weight = 1, minsize = 350 ) # table
+    self.grid_columnconfigure( 0, weight = 1, minsize = 250 )  # sidebar
+    self.grid_columnconfigure( 1, weight = 2, minsize = 600 )  # amount year
+    self.grid_columnconfigure( 2, weight = 1, minsize = 400 )  # amount month
+    self.grid_columnconfigure( 3, weight = 1, minsize = 350 )  # table
     self.grid_rowconfigure( (0, 1), weight = 1 )
 
     # FRAMES
@@ -97,7 +97,7 @@ class Bookkeeper( customtkinter.CTk ):
     frame_month = Elements.frame( self, 2, 0, 1, 1, W20, W20 )
     frame_table = Elements.frame( self, 3, 0, 1, 2, 20, 20 )
     frame_table_data = Elements.scroll( frame_table, 0, 1, 5, 4, 0, 0 )
-    frame_table_data.configure(fg_color="transparent")
+    frame_table_data.configure( fg_color = "transparent" )
 
     frame_graph = Elements.frame( self, 1, 1, 2, 1, W20, 20 )
 

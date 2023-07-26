@@ -8,7 +8,7 @@ from application.database.database_categories import Database_Categories
 # GLOBALS
 #######################################
 
-ELEMENT_VIEW_MONTH = {}
+ELEMENT_VIEW_MONTH = { }
 
 
 # CLASS
@@ -17,41 +17,41 @@ ELEMENT_VIEW_MONTH = {}
 class View_Month:
 
   @staticmethod
-  def create(append: CTkFrame):
+  def create( append: CTkFrame ):
     row = 0
     for category in Database_Categories.select():
-      Elements.label(append, "€", 1, row, W20, W20)
-      s = Elements.label(append, "0.00", 2, row, (10,0), W20)
-      p = Elements.label(append, "0.00", 3, row, (10,0), W20)
-      Elements.label(append, "%", 4, row, (10, 10), W20)
-      Elements.button(append, "@", paint_category_month, 5, row, (20, 20), W20).configure(width=25)
+      Elements.label( append, "€", 1, row, W20, W20 )
+      s = Elements.label( append, "0.00", 2, row, (10, 0), W20 )
+      p = Elements.label( append, "0.00", 3, row, (10, 0), W20 )
+      Elements.label( append, "%", 4, row, (10, 10), W20 )
+      Elements.button( append, "@", paint_category_month, 5, row, (20, 20), W20 ).configure( width = 25 )
 
-      s.configure(anchor="e", width=60)
-      p.configure(anchor="e", width=60)
+      s.configure( anchor = "e", width = 60 )
+      p.configure( anchor = "e", width = 60 )
 
-      ELEMENT_VIEW_MONTH[category["ctr_name"]] = [s, p]
+      ELEMENT_VIEW_MONTH[ category[ "ctr_name" ] ] = [ s, p ]
       row += 1
 
   @staticmethod
   def update():
-    income = Database_Mutations.sum_category_month(CATEGORY_INCOME)
+    income = Database_Mutations.sum_category_month( CATEGORY_INCOME )
 
     for category in Database_Categories.select():
-      current = Database_Mutations.sum_category_month(category["ctr_id"])
-      percent = View_Month.calculate_percentage(current, income)
+      current = Database_Mutations.sum_category_month( category[ "ctr_id" ] )
+      percent = View_Month.calculate_percentage( current, income )
 
-      s, p = ELEMENT_VIEW_MONTH[category["ctr_name"]]
-      s.configure(text=View_Month.format_amount(current))
-      p.configure(text=View_Month.format_percentage(percent))
-
-  @staticmethod
-  def calculate_percentage(amount, income) -> float:
-    return 0 if income == 0 else round((amount / income) * 100, 1)
+      s, p = ELEMENT_VIEW_MONTH[ category[ "ctr_name" ] ]
+      s.configure( text = View_Month.format_amount( current ) )
+      p.configure( text = View_Month.format_percentage( percent ) )
 
   @staticmethod
-  def format_amount(amount: float):
-    return "{:.2f}".format(amount)
+  def calculate_percentage( amount, income ) -> float:
+    return 0 if income == 0 else round( (amount / income) * 100, 1 )
 
   @staticmethod
-  def format_percentage(percentage: float):
-    return "{:.1f}".format(percentage)
+  def format_amount( amount: float ):
+    return "{:.2f}".format( amount )
+
+  @staticmethod
+  def format_percentage( percentage: float ):
+    return "{:.1f}".format( percentage )

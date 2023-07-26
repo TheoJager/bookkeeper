@@ -8,7 +8,8 @@ from application.database.database_categories import Database_Categories
 # GLOBALS
 #######################################
 
-ELEMENT_VIEW_TOTAL = {}
+ELEMENT_VIEW_TOTAL = { }
+
 
 # CLASS
 #######################################
@@ -16,42 +17,42 @@ ELEMENT_VIEW_TOTAL = {}
 class View_Year:
 
   @staticmethod
-  def create(append: CTkFrame):
+  def create( append: CTkFrame ):
     row = 0
     for category in Database_Categories.select():
-      Elements.label(append, category["ctr_name"], 1, row, W20, W20).configure(anchor="w", width=125)
-      Elements.label(append, "€", 2, row, W20, W20)
-      s = Elements.label(append, "0.00", 3, row, (10,0), W20)
-      p = Elements.label(append, "0.00", 4, row, (10,0), W20)
-      Elements.label(append, "%", 5, row, (10, 10), W20)
-      Elements.button(append, "@", paint_category_year, 6, row, (20, 20), W20).configure(width=25)
+      Elements.label( append, category[ "ctr_name" ], 1, row, W20, W20 ).configure( anchor = "w", width = 125 )
+      Elements.label( append, "€", 2, row, W20, W20 )
+      s = Elements.label( append, "0.00", 3, row, (10, 0), W20 )
+      p = Elements.label( append, "0.00", 4, row, (10, 0), W20 )
+      Elements.label( append, "%", 5, row, (10, 10), W20 )
+      Elements.button( append, "@", paint_category_year, 6, row, (20, 20), W20 ).configure( width = 25 )
 
-      s.configure(anchor="e", width=60)
-      p.configure(anchor="e", width=60)
+      s.configure( anchor = "e", width = 60 )
+      p.configure( anchor = "e", width = 60 )
 
-      ELEMENT_VIEW_TOTAL[category["ctr_name"]] = [s, p]
+      ELEMENT_VIEW_TOTAL[ category[ "ctr_name" ] ] = [ s, p ]
       row += 1
 
   @staticmethod
   def update():
-    income = Database_Mutations.sum_category_year(CATEGORY_INCOME)
+    income = Database_Mutations.sum_category_year( CATEGORY_INCOME )
 
     for category in Database_Categories.select():
-      current = Database_Mutations.sum_category_year(category["ctr_id"])
-      percent = View_Year.calculate_percentage(current, income)
+      current = Database_Mutations.sum_category_year( category[ "ctr_id" ] )
+      percent = View_Year.calculate_percentage( current, income )
 
-      s, p = ELEMENT_VIEW_TOTAL[category["ctr_name"]]
-      s.configure(text=View_Year.format_amount(current))
-      p.configure(text=View_Year.format_percentage(percent))
-
-  @staticmethod
-  def calculate_percentage(amount, income) -> float:
-    return 0 if income == 0 else round((amount / income) * 100, 1)
+      s, p = ELEMENT_VIEW_TOTAL[ category[ "ctr_name" ] ]
+      s.configure( text = View_Year.format_amount( current ) )
+      p.configure( text = View_Year.format_percentage( percent ) )
 
   @staticmethod
-  def format_amount(amount: float):
-    return "{:.2f}".format(amount)
+  def calculate_percentage( amount, income ) -> float:
+    return 0 if income == 0 else round( (amount / income) * 100, 1 )
 
   @staticmethod
-  def format_percentage(percentage: float):
-    return "{:.1f}".format(percentage)
+  def format_amount( amount: float ):
+    return "{:.2f}".format( amount )
+
+  @staticmethod
+  def format_percentage( percentage: float ):
+    return "{:.1f}".format( percentage )

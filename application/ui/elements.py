@@ -34,7 +34,7 @@ class Elements:
 
   @staticmethod
   def progressbar( append: CTkBaseClass, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkProgressBar:
-    elements = Elements.grid( CTkProgressBar(append, orientation="vertical"), column, row, 1, 1, padx, pady )
+    elements = Elements.grid( CTkProgressBar( append, orientation = "vertical" ), column, row, 1, 1, padx, pady )
     elements.grid( sticky = "nsw" )
     return elements
 

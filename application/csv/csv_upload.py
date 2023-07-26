@@ -34,7 +34,7 @@ def csv_to_records( path: str ) -> list:
       'mts_amount'     : csv_convert_numbers( row[ 'Transactiebedrag' ] ),
       'mts_start'      : csv_convert_numbers( row[ 'Beginsaldo' ] ),
       'mts_description': row[ 'Omschrijving' ],
-      'mts_category'   : randrange(1, 9)
+      'mts_category'   : randrange( 1, 9 )
     } )
 
   csv_file.close()
@@ -44,15 +44,15 @@ def csv_to_records( path: str ) -> list:
 
 def csv_to_database():
   filename = csv_get_filename()
-  if len(filename):
-    records = csv_to_records(filename)
-    Database_Mutations.insert_base_value(records[0])
+  if len( filename ):
+    records = csv_to_records( filename )
+    Database_Mutations.insert_base_value( records[ 0 ] )
     for record in records:
       try:
-        Database_Mutations.insert(record)
+        Database_Mutations.insert( record )
       except sqlite3.IntegrityError:
         continue
-    Message.ok('result', 'import successful')
+    Message.ok( 'result', 'import successful' )
 
 
 def csv_convert_numbers( number: str ):

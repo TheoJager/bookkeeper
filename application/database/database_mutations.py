@@ -49,15 +49,15 @@ class Database_Mutations:
     Database.query( sql, execute )
 
   @staticmethod
-  def insert_base_value(record: list):
-    if len(Database_Mutations.select()) == 0:
-      Database_Mutations.insert({
-        'mts_date': "19700101",
-        'mts_amount': record['mts_start'],
-        'mts_start': 0,
+  def insert_base_value( record: list ):
+    if len( Database_Mutations.select() ) == 0:
+      Database_Mutations.insert( {
+        'mts_date'       : "19700101",
+        'mts_amount'     : record[ 'mts_start' ],
+        'mts_start'      : 0,
         'mts_description': 'start',
-        'mts_category': 8,
-      })
+        'mts_category'   : 8,
+      } )
 
   @staticmethod
   def sum() -> float:
