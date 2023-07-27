@@ -47,7 +47,7 @@ class Navigation:
   @staticmethod
   def create_date() -> str:
     current_year = Navigation.get_current_year()
-    year = current_year if Navigation.MONTH >= Navigation.get_current_month() else current_year - 1
+    year = current_year - 1 if Navigation.MONTH > Navigation.get_current_month() else current_year
 
     d = datetime.date( year, Navigation.MONTH, 1 )
     return d.strftime( "%B %Y" )
