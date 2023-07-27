@@ -12,10 +12,10 @@ class Database_Mutations:
     sql = """
       CREATE TABLE IF NOT EXISTS mutations (
         mts_id integer primary key, 
+        ctr_id integer, 
         mts_date integer, 
         mts_amount real, 
         mts_start real, 
-        ctr_id integer, 
         mts_description text,
         UNIQUE(mts_date,mts_amount,mts_start,mts_description)
       )
@@ -30,24 +30,50 @@ class Database_Mutations:
   @staticmethod
   def record( id: int ) -> list:
     sql = "SELECT * FROM mutations WHERE mts_id = :mts_id"
-    execute = { "mts_id": id }
-    return Database.query( sql, execute )
+    record = { "mts_id": id }
+    return Database.query( sql, record )
 
   @staticmethod
   def insert( record: Dict ):
-    sql = "INSERT INTO mutations(mts_date, mts_amount, mts_start, mts_description, ctr_id) VALUES(:mts_date, :mts_amount, :mts_start, :mts_description, :ctr_id)"
+    sql = """
+      INSERT INTO mutations(
+        mts_date, 
+        mts_amount, 
+        mts_start, 
+        mts_description, 
+        ctr_id
+      ) VALUES (
+        :mts_date, 
+        :mts_amount, 
+        :mts_start, 
+        :mts_description, 
+        :ctr_id
+      )
+    """
+
     Database.query( sql, record )
 
   @staticmethod
   def update( record: Dict ):
-    sql = "UPDATE mutations SET mts_date = :mts_date, mts_amount = :mts_amount, mts_description = :mts_description, ctr_id = :ctr_id WHERE mts_id = :mts_id"
+    sql = """
+      UPDATE 
+        mutations 
+      SET 
+        mts_date        = :mts_date, 
+        mts_amount      = :mts_amount, 
+        mts_description = :mts_description, 
+        ctr_id          = :ctr_id
+      WHERE 
+        mts_id = :mts_id
+    """
+
     Database.query( sql, record )
 
   @staticmethod
   def delete( id: int ):
     sql = "DELETE FROM mutations WHERE mts_id = :mts_id"
-    execute = { "mts_id": id }
-    Database.query( sql, execute )
+    record = { "mts_id": id }
+    Database.query( sql, record )
 
   @staticmethod
   def insert_base_value( record: list ):
@@ -71,13 +97,29 @@ class Database_Mutations:
 
   @staticmethod
   def sum_category_year( category: int ) -> float:
-    last_year = datetime.datetime.now() - datetime.timedelta( days = 365 )
+    x = datetime.datetime.now()
+    month = int( x.strftime( "%m" ) )
 
-    mts_date = last_year.strftime( "%Y%m01" )
+    x = datetime.datetime.now()
+    year = int( x.strftime( "%Y" ) )
 
-    sql = "select sum(mts_amount) as mts_total from mutations WHERE ctr_id = :ctr_id AND mts_date >= :mts_date"
-    execute = { "ctr_id": category, "mts_date": mts_date }
-    mts_total = Database.query( sql, execute )
+    mts_date_start= date(year - 1, month + 1, 1)
+    mts_date_end= date(year, month + 1, 1)
+
+    sql = """
+      SELECT 
+        sum(mts_amount) as mts_total
+      FROM 
+        mutations 
+      WHERE ctr_id    = :ctr_id 
+        AND mts_date >= :mts_date_start 
+        AND mts_date <  :mts_date_end
+      ORDER BY 
+        mts_date DESC
+    """
+
+    record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
+    mts_total = Database.query( sql, record )
 
     return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
 
@@ -97,15 +139,15 @@ class Database_Mutations:
         sum(mts_amount) as mts_total
       FROM 
         mutations 
-      WHERE ctr_id = :ctr_id 
+      WHERE ctr_id    = :ctr_id 
         AND mts_date >= :mts_date_start 
         AND mts_date <  :mts_date_end
       ORDER BY 
         mts_date DESC
     """
 
-    execute = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    mts_total = Database.query( sql, execute )
+    record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
+    mts_total = Database.query( sql, record )
 
     return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
 
@@ -124,11 +166,12 @@ class Database_Mutations:
       FROM 
         mutations 
         LEFT JOIN categories USING(ctr_id)
-      WHERE ctr_id = :ctr_id 
+      WHERE ctr_id    = :ctr_id 
         AND mts_date >= :mts_date_start 
         AND mts_date <  :mts_date_end
       ORDER BY 
         mts_date DESC
     """
-    execute = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    return Database.query( sql, execute )
+
+    record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
+    return Database.query( sql, record )

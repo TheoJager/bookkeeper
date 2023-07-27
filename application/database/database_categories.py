@@ -28,8 +28,7 @@ class Database_Categories:
       { 'ctr_income': 0, 'ctr_sequence': 4, 'ctr_name': 'abonnementen' },
       { 'ctr_income': 0, 'ctr_sequence': 5, 'ctr_name': 'kosten' },
       { 'ctr_income': 0, 'ctr_sequence': 6, 'ctr_name': 'sparen' },
-      { 'ctr_income': 0, 'ctr_sequence': 7, 'ctr_name': 'beleggingen' },
-      { 'ctr_income': 1, 'ctr_sequence': 8, 'ctr_name': 'salaris' },
+      { 'ctr_income': 1, 'ctr_sequence': 7, 'ctr_name': 'salaris' },
     ]
     for cat_record in cat_records:
       try:
@@ -45,32 +44,43 @@ class Database_Categories:
   @staticmethod
   def record( id: int ) -> list:
     sql = 'SELECT * FROM categories WHERE ctr_id = :ctr_id'
-    execute = { 'ctr_id': id }
-    return Database.query( sql, execute )
+    record = { 'ctr_id': id }
+    return Database.query( sql, record )
 
   @staticmethod
   def insert( record: Dict ):
-    sql = 'INSERT INTO categories(ctr_name, ctr_income, ctr_sequence) VALUES(:ctr_name, :ctr_income, :ctr_sequence)'
-    execute = {
-      'ctr_name'    : record[ 'ctr_name' ],
-      'ctr_income'  : record[ 'ctr_income' ],
-      'ctr_sequence': record[ 'ctr_sequence' ],
-    }
-    Database.query( sql, execute )
+    sql = """
+      INSERT INTO categories(
+        ctr_name, 
+        ctr_income, 
+        ctr_sequence
+      ) VALUES (
+        :ctr_name, 
+        :ctr_income, 
+        :ctr_sequence
+      )
+    """
+
+    Database.query( sql, record )
 
   @staticmethod
   def update( record: Dict ):
-    sql = 'UPDATE categories SET ctr_name = :ctr_name, ctr_income = :ctr_income, ctr_sequence = :ctr_sequence WHERE ctr_id = :ctr_id'
-    execute = {
-      'ctr_id'      : record[ 'ctr_id' ],
-      'ctr_name'    : record[ 'ctr_name' ],
-      'ctr_income'  : record[ 'ctr_income' ],
-      'ctr_sequence': record[ 'ctr_sequence' ],
-    }
-    Database.query( sql, execute )
+    sql = """
+      UPDATE 
+        categories 
+      SET 
+        ctr_name     = :ctr_name, 
+        ctr_income   = :ctr_income, 
+        ctr_sequence = :ctr_sequence 
+      WHERE 
+        ctr_id = :ctr_id
+    """
+
+    Database.query( sql, record )
 
   @staticmethod
   def delete( id: int ):
     sql = 'DELETE FROM categories WHERE ctr_id = :ctr_id'
-    execute = { 'ctr_id': id }
-    Database.query( sql, execute )
+
+    record = { 'ctr_id': id }
+    Database.query( sql, record )
