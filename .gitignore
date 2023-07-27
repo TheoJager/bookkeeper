@@ -29,7 +29,6 @@ rsa.public
 rsa.private
 .idea/
 images/
-test.*
 __pycache__/
 bookkeeper.db
 identifier.sqlite
