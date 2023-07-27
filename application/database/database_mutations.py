@@ -123,6 +123,7 @@ class Database_Mutations:
 
     return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
 
+
   @staticmethod
   def sum_category_month( category: int ) -> float:
     x = datetime.datetime.now()
@@ -157,6 +158,34 @@ class Database_Mutations:
     year = int( x.strftime( "%Y" ) )
 
     mts_date_start= date(year, month, 1)
+    mts_date_end= date(year, month + 1, 1)
+
+    sql = """
+      SELECT 
+        ctr_name, 
+        mutations.*
+      FROM 
+        mutations 
+        LEFT JOIN categories USING(ctr_id)
+      WHERE ctr_id    = :ctr_id 
+        AND mts_date >= :mts_date_start 
+        AND mts_date <  :mts_date_end
+      ORDER BY 
+        mts_date DESC
+    """
+
+    record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
+    return Database.query( sql, record )
+
+  @staticmethod
+  def select_category_year( category: int ) -> list:
+    x = datetime.datetime.now()
+    month = int( x.strftime( "%m" ) )
+
+    x = datetime.datetime.now()
+    year = int( x.strftime( "%Y" ) )
+
+    mts_date_start= date(year - 1, month + 1, 1)
     mts_date_end= date(year, month + 1, 1)
 
     sql = """

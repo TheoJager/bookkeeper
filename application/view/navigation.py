@@ -12,27 +12,27 @@ locale.setlocale( locale.LC_TIME, "nl_NL" )
 
 
 class Navigation:
-  CURRENT_MONTH: int = 1
-  ELEMENT_CURRENT_MONTH: CTkLabel
+  MONTH: int = 1
+  ELEMENT: CTkLabel
 
   @staticmethod
   def next():
-    Navigation.CURRENT_MONTH = 1 if Navigation.CURRENT_MONTH + 1 > 12 else Navigation.CURRENT_MONTH + 1
+    Navigation.MONTH = 1 if Navigation.MONTH + 1 > 12 else Navigation.MONTH + 1
     Navigation.update()
 
   @staticmethod
   def previous():
-    Navigation.CURRENT_MONTH = 12 if Navigation.CURRENT_MONTH - 1 < 1 else Navigation.CURRENT_MONTH - 1
+    Navigation.MONTH = 12 if Navigation.MONTH - 1 < 1 else Navigation.MONTH - 1
     Navigation.update()
 
   @staticmethod
   def current():
-    Navigation.CURRENT_MONTH = Navigation.get_current_month()
+    Navigation.MONTH = Navigation.get_current_month()
     Navigation.update()
 
   @staticmethod
   def update():
-    Navigation.ELEMENT_CURRENT_MONTH.configure( text = Navigation.create_date() )
+    Navigation.ELEMENT.configure( text = Navigation.create_date() )
 
   @staticmethod
   def get_current_year() -> int:
@@ -47,14 +47,14 @@ class Navigation:
   @staticmethod
   def create_date() -> str:
     current_year = Navigation.get_current_year()
-    year = current_year if Navigation.CURRENT_MONTH >= Navigation.get_current_month() else current_year - 1
+    year = current_year if Navigation.MONTH >= Navigation.get_current_month() else current_year - 1
 
-    d = datetime.date( year, Navigation.CURRENT_MONTH, 1 )
+    d = datetime.date( year, Navigation.MONTH, 1 )
     return d.strftime( "%B %Y" )
 
   @staticmethod
   def create_element_date( append: CTkFrame, column: int = 0, row: int = 0 ):
-    Navigation.ELEMENT_CURRENT_MONTH = Elements.header( append, "januari 1970", column, row, W20, W20 )
+    Navigation.ELEMENT = Elements.header( append, "januari 1970", column, row, W20, W20 )
 
   @staticmethod
   def create_navigation( append: CTkFrame, column: int = 0, row: int = 0 ):
@@ -68,4 +68,4 @@ class Navigation:
 
 # INITIALIZE
 #######################################
-Navigation.CURRENT_MONTH = Navigation.get_current_month()
+Navigation.MONTH = Navigation.get_current_month()

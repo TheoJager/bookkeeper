@@ -5,7 +5,7 @@ from application.database.database_categories import Database_Categories
 
 
 class View_Graph:
-  ELEMENT_GRAPH = { }
+  ELEMENTS = { }
 
   @staticmethod
   def create_header( append: CTkFrame, column: int, name: str ):
