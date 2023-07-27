@@ -10,11 +10,15 @@ class Elements:
 
   @staticmethod
   def frame( append: CTkBaseClass, column: int = 0, row: int = 0, columnspan: int = 1, rowspan: int = 1, padx: int = 0, pady: int = 0 ) -> CTkFrame:
-    return Elements.grid( CTkFrame( append ), column, row, columnspan, rowspan, padx, pady )
+    element = Elements.grid( CTkFrame( append ), column, row, columnspan, rowspan, padx, pady )
+    element.configure( border_width = 0 )
+    return element
 
   @staticmethod
   def scroll( append: CTkBaseClass, column: int = 0, row: int = 0, columnspan: int = 1, rowspan: int = 1, padx: int = 0, pady: int = 0 ) -> CTkScrollableFrame:
-    return Elements.grid( CTkScrollableFrame( append ), column, row, columnspan, rowspan, padx, pady )
+    element = Elements.grid( CTkScrollableFrame( append ), column, row, columnspan, rowspan, padx, pady )
+    element.configure( border_width = 0, corner_radius = 0 )
+    return element
 
   @staticmethod
   def title( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkLabel:
@@ -22,21 +26,23 @@ class Elements:
 
   @staticmethod
   def header( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkLabel:
-    elements = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 13, weight = "bold" ) ), column, row, 1, 1, padx, pady )
-    elements.grid( sticky = "nsw" )
-    return elements
+    element = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 13, weight = "bold" ) ), column, row, 1, 1, padx, pady )
+    element.grid( sticky = "nsw" )
+    element.configure( anchor = "w" )
+    return element
 
   @staticmethod
   def label( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkLabel:
-    elements = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 13 ) ), column, row, 1, 1, padx, pady )
-    elements.grid( sticky = "nsw" )
-    return elements
+    element = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 12 ) ), column, row, 1, 1, padx, pady )
+    element.grid( sticky = "nsw" )
+    element.configure( anchor = "w" )
+    return element
 
   @staticmethod
   def progressbar( append: CTkBaseClass, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkProgressBar:
-    elements = Elements.grid( CTkProgressBar( append, orientation = "vertical" ), column, row, 1, 1, padx, pady )
-    elements.grid( sticky = "nsw" )
-    return elements
+    element = Elements.grid( CTkProgressBar( append, orientation = "vertical" ), column, row, 1, 1, padx, pady )
+    element.grid( sticky = "nsw" )
+    return element
 
   @staticmethod
   def button( append: CTkBaseClass, text: str, command: callable, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkButton:

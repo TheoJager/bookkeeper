@@ -3,8 +3,8 @@ from application.ui.elements import Elements
 from application.constants import W20, CATEGORY_INCOME
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
-from application.view.table import View_Table
 from application.functions import format_amount, format_percentage
+from application.view.table import View_Table
 
 
 class View_Month:
@@ -30,10 +30,10 @@ class View_Month:
 
   @staticmethod
   def update():
-    income = Database_Mutations.sum_category_month( CATEGORY_INCOME )
+    income = Database_Mutations.sum_category_current_month( CATEGORY_INCOME )
 
     for category in Database_Categories.select():
-      current = Database_Mutations.sum_category_month( category[ "ctr_id" ] )
+      current = Database_Mutations.sum_category_current_month( category[ "ctr_id" ] )
       percent = View_Month.calculate_percentage( current, income )
 
       s, p = View_Month.ELEMENTS[ category[ "ctr_name" ] ]

@@ -81,10 +81,10 @@ class Bookkeeper( customtkinter.CTk ):
     # configure grid layout (4x4)
     #######################################
 
-    self.grid_columnconfigure( 0, weight = 1, minsize = 250 )  # sidebar
-    self.grid_columnconfigure( 1, weight = 2, minsize = 600 )  # amount year
+    self.grid_columnconfigure( 0, weight = 1, minsize = 225 )  # sidebar
+    self.grid_columnconfigure( 1, weight = 2, minsize = 575 )  # amount year
     self.grid_columnconfigure( 2, weight = 1, minsize = 400 )  # amount month
-    self.grid_columnconfigure( 3, weight = 1, minsize = 350 )  # table
+    self.grid_columnconfigure( 3, weight = 1, minsize = 400 )  # table
     self.grid_rowconfigure( (0, 1), weight = 1 )
 
     # FRAMES

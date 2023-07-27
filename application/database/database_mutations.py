@@ -83,7 +83,7 @@ class Database_Mutations:
         'mts_amount'     : record[ 'mts_start' ],
         'mts_start'      : 0,
         'mts_description': 'start',
-        'ctr_id'   : 8,
+        'ctr_id'         : 8,
       } )
 
   @staticmethod
@@ -103,8 +103,8 @@ class Database_Mutations:
     x = datetime.datetime.now()
     year = int( x.strftime( "%Y" ) )
 
-    mts_date_start= date(year - 1, month + 1, 1)
-    mts_date_end= date(year, month + 1, 1)
+    mts_date_start = date( year - 1, month + 1, 1 )
+    mts_date_end = date( year, month + 1, 1 )
 
     sql = """
       SELECT 
@@ -123,17 +123,24 @@ class Database_Mutations:
 
     return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
 
-
   @staticmethod
-  def sum_category_month( category: int ) -> float:
+  def sum_category_current_month( category: int ) -> float:
     x = datetime.datetime.now()
     month = int( x.strftime( "%m" ) )
 
+    return Database_Mutations.sum_category_month( category, month )
+
+  @staticmethod
+  def sum_category_month( category: int, month: int ) -> float:
+    x = datetime.datetime.now()
+    current_month = int( x.strftime( "%m" ) )
+
     x = datetime.datetime.now()
     year = int( x.strftime( "%Y" ) )
+    year = year - 1 if month > current_month else year
 
-    mts_date_start= date(year, month, 1)
-    mts_date_end= date(year, month + 1, 1)
+    mts_date_start = date( year, month, 1 )
+    mts_date_end = date( year, month + 1, 1 )
 
     sql = """
       SELECT 
@@ -151,14 +158,21 @@ class Database_Mutations:
     mts_total = Database.query( sql, record )
 
     return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
+
+  @staticmethod
+  def list_sum_category_month( category: int ):
+    response = [ ]
+    for i in range( 12 ):
+      response.append( Database_Mutations.sum_category_month( category, i + 1 ) )
+    return response
 
   @staticmethod
   def select_category_month( category: int, month: int ) -> list:
     x = datetime.datetime.now()
     year = int( x.strftime( "%Y" ) )
 
-    mts_date_start= date(year, month, 1)
-    mts_date_end= date(year, month + 1, 1)
+    mts_date_start = date( year, month, 1 )
+    mts_date_end = date( year, month + 1, 1 )
 
     sql = """
       SELECT 
@@ -185,8 +199,8 @@ class Database_Mutations:
     x = datetime.datetime.now()
     year = int( x.strftime( "%Y" ) )
 
-    mts_date_start= date(year - 1, month + 1, 1)
-    mts_date_end= date(year, month + 1, 1)
+    mts_date_start = date( year - 1, month + 1, 1 )
+    mts_date_end = date( year, month + 1, 1 )
 
     sql = """
       SELECT 
