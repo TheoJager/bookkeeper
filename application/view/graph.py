@@ -3,16 +3,9 @@ from application.constants import W20
 from application.ui.elements import Elements
 from application.database.database_categories import Database_Categories
 
-# GLOBALS
-#######################################
-
-ELEMENT_GRAPH = { }
-
-
-# CLASS
-#######################################
 
 class View_Graph:
+  ELEMENT_GRAPH = { }
 
   @staticmethod
   def create_header( append: CTkFrame, column: int, name: str ):

@@ -3,17 +3,8 @@ from application.constants import W20
 from application.database.database_mutations import Database_Mutations
 from application.functions import format_amount
 from application.ui.elements import Elements
-from application.view.navigation import CURRENT_MONTH
+from application.view.navigation import Navigation
 
-# GLOBALS
-#######################################
-
-ELEMENT_TABLE: CTkFrame
-ELEMENT_TABLE_PARENT: CTkFrame
-
-
-# CLASS
-#######################################
 
 class View_Table:
   ELEMENT_TABLE: CTkFrame = None
@@ -44,9 +35,9 @@ class View_Table:
     View_Table.create_table( View_Table.ELEMENT_TABLE_PARENT )
 
     row = 0
-    for record in Database_Mutations.select_category_month( ctr_id, CURRENT_MONTH ):
+    for record in Database_Mutations.select_category_month( ctr_id, Navigation.CURRENT_MONTH ):
       Elements.label( View_Table.ELEMENT_TABLE, record[ "mts_date" ], 0, row, W20, W20 )
       Elements.label( View_Table.ELEMENT_TABLE, "src_name", 1, row, W20, W20 )
       Elements.label( View_Table.ELEMENT_TABLE, record[ "ctr_name" ], 2, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT_TABLE, format_amount(record[ "mts_amount" ],), 3, row, W20, W20 )
+      Elements.label( View_Table.ELEMENT_TABLE, format_amount( record[ "mts_amount" ], ), 3, row, W20, W20 )
       row += 1

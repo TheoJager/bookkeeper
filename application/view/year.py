@@ -6,16 +6,9 @@ from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 from application.functions import format_amount, format_percentage
 
-# GLOBALS
-#######################################
-
-ELEMENT_VIEW_TOTAL = { }
-
-
-# CLASS
-#######################################
 
 class View_Year:
+  ELEMENT_VIEW_TOTAL = { }
 
   @staticmethod
   def create( append: CTkFrame ):
@@ -31,7 +24,7 @@ class View_Year:
       s.configure( anchor = "e", width = 60 )
       p.configure( anchor = "e", width = 60 )
 
-      ELEMENT_VIEW_TOTAL[ category[ "ctr_name" ] ] = [ s, p ]
+      View_Year.ELEMENT_VIEW_TOTAL[ category[ "ctr_name" ] ] = [ s, p ]
       row += 1
 
   @staticmethod
@@ -42,7 +35,7 @@ class View_Year:
       current = Database_Mutations.sum_category_year( category[ "ctr_id" ] )
       percent = View_Year.calculate_percentage( current, income )
 
-      s, p = ELEMENT_VIEW_TOTAL[ category[ "ctr_name" ] ]
+      s, p = View_Year.ELEMENT_VIEW_TOTAL[ category[ "ctr_name" ] ]
       s.configure( text = format_amount( current ) )
       p.configure( text = format_percentage( percent ) )
 
