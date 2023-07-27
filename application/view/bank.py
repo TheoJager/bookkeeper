@@ -2,7 +2,7 @@ from customtkinter import CTkFrame, CTkLabel
 from application.constants import W20
 from application.ui.elements import Elements
 from application.database.database_mutations import Database_Mutations
-from functions import format_amount
+from application.functions import format_amount
 
 # GLOBALS
 #######################################

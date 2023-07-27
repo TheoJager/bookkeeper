@@ -4,7 +4,7 @@ from application.constants import W20, CATEGORY_INCOME
 from application.categories.categories import paint_category_year
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
-from functions import format_amount, format_percentage
+from application.functions import format_amount, format_percentage
 
 # GLOBALS
 #######################################

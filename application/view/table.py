@@ -1,9 +1,9 @@
 from customtkinter import CTkFrame
 from application.constants import W20
 from application.database.database_mutations import Database_Mutations
+from application.functions import format_amount
 from application.ui.elements import Elements
 from application.view.navigation import CURRENT_MONTH
-from functions import format_amount
 
 # GLOBALS
 #######################################
