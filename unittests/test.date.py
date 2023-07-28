@@ -1,6 +1,6 @@
 import unittest
 
-from date.date import date
+from application.date.date import date
 
 
 class TestStringMethods(unittest.TestCase):

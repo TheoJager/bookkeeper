@@ -1,8 +1,10 @@
+from typing import Dict
+
 from customtkinter import CTkFrame
-from application.constants import W20
+
+from application.constants import W20, W10
 from application.functions import format_amount
 from application.ui.elements import Elements
-from application.view.navigation import Navigation
 from application.database.database_mutations import Database_Mutations
 
 
@@ -11,68 +13,75 @@ class View_Table:
   ELEMENT_PARENT: CTkFrame = None
 
   @staticmethod
-  def set_grid_sizes( append: CTkFrame ):
-    append.grid_columnconfigure( 0, minsize = 65 )  # date
-    append.grid_columnconfigure( 1, minsize = 60 )  # product
-    append.grid_columnconfigure( 2, minsize = 90 )  # category
-    append.grid_columnconfigure( 3, minsize = 5 )   # euro
-    append.grid_columnconfigure( 4, minsize = 40 )  # amount
-    append.grid_columnconfigure( 5, minsize = 40 )  # spacer
-
-  @staticmethod
-  def create_headers( append: CTkFrame ):
+  def create( append: CTkFrame, month: int ):
     View_Table.ELEMENT_PARENT = append
-
-    append = Elements.frame( append, 0, 1, 1, 1, 0, 0 )
-    append.configure( width = 250 )
-
-    View_Table.set_grid_sizes( append )
-
-    Elements.header( append, "date", 0, 0, W20, W20 )
-    Elements.header( append, "product", 1, 0, W20, W20 )
-    Elements.header( append, "category", 2, 0, W20, W20 )
-    Elements.header( append, "", 3, 0, W20, W20 )
-    Elements.header( append, "amount", 4, 0, W20, W20 )
-    Elements.header( append, "", 5, 0, 20, W20 )
+    View_Table.create_headers()
+    View_Table.update_month( month )
 
   @staticmethod
-  def create_table( append: CTkFrame ):
-    View_Table.ELEMENT = Elements.scroll( append, 0, 2, 1, 1, 0, 0 )
-    View_Table.ELEMENT.configure( fg_color = "transparent", height = 600 )
+  def create_frame_headers( append: CTkFrame ) -> CTkFrame:
+    frame = Elements.frame( append, 0, 1 )
+    frame.configure( width = 400, fg_color = "transparent" )
+    return frame
 
   @staticmethod
-  def remove_table():
-    if View_Table.ELEMENT is not None:
-      View_Table.ELEMENT.destroy()
+  def create_frame_rows( append: CTkFrame ) -> CTkFrame:
+    frame = Elements.scroll( append, 0, 2 )
+    frame.configure( width = 400, height = 290, fg_color = "transparent" )
+    View_Table.ELEMENT = frame
+    return frame
 
   @staticmethod
-  def update_rows_month( ctr_id: int ):
-    View_Table.remove_table()
-    View_Table.create_table( View_Table.ELEMENT_PARENT )
-    View_Table.set_grid_sizes( View_Table.ELEMENT )
+  def create_headers():
+    View_Table.create_row(
+      View_Table.create_frame_headers( View_Table.ELEMENT_PARENT ),
+      [ "date", "product", "category", "", "amount" ],
+      0, (20, 10) )
+
+  @staticmethod
+  def create_row( append: CTkFrame, record: Dict, row: int, pady: int ):
+    val1, val2, val3, val4, val5 = record
+    Elements.label( append, val1, 0, row, W20, pady ).configure( width = 70 )
+    Elements.label( append, val2, 1, row, W10, pady ).configure( width = 115 )
+    Elements.label( append, val3, 2, row, W10, pady ).configure( width = 90 )
+    Elements.label( append, val4, 3, row, W10, pady ).configure( width = 5 )
+    Elements.label( append, val5, 4, row, W10, pady ).configure( width = 40, anchor = "e" )
+
+  @staticmethod
+  def update_rows( records: callable ):
+    append = View_Table.reset_frame_rows()
 
     row = 0
-    for record in Database_Mutations.select_category_month( ctr_id, Navigation.MONTH ):
-      Elements.label( View_Table.ELEMENT, record[ "mts_date" ], 0, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, "src_name", 1, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, record[ "ctr_name" ], 2, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, "€", 3, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, format_amount( record[ "mts_amount" ] ), 4, row, W20, W20 ).configure( anchor = "e" )
-      Elements.label( View_Table.ELEMENT, "", 5, row, 20, W20 )
+    for record in records():
+      data = [
+        record[ "mts_date" ],
+        "src_name",
+        record[ "ctr_name" ],
+        "€",
+        format_amount( record[ "mts_amount" ] )
+      ]
+
+      View_Table.create_row( append, data, row, 3 )
       row += 1
 
   @staticmethod
-  def update_rows_year( ctr_id: int ):
-    View_Table.remove_table()
-    View_Table.create_table( View_Table.ELEMENT_PARENT )
-    View_Table.set_grid_sizes( View_Table.ELEMENT )
+  def update_month( month: int ):
+    View_Table.update_rows( lambda: Database_Mutations.select_month( month ) )
 
-    row = 0
-    for record in Database_Mutations.select_category_year( ctr_id ):
-      Elements.label( View_Table.ELEMENT, record[ "mts_date" ], 0, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, "src_name", 1, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, record[ "ctr_name" ], 2, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, "€", 3, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, format_amount( record[ "mts_amount" ], ), 4, row, W20, W20 )
-      Elements.label( View_Table.ELEMENT, "", 5, row, 20, W20 )
-      row += 1
+  @staticmethod
+  def update_category_month( ctr_id: int, month: int ):
+    View_Table.update_rows( lambda: Database_Mutations.select_category_month( ctr_id, month ) )
+
+  @staticmethod
+  def update_category_year( ctr_id: int ):
+    View_Table.update_rows( lambda: Database_Mutations.select_category_year( ctr_id ) )
+
+  @staticmethod
+  def reset_frame_rows():
+    View_Table.remove_frame( View_Table.ELEMENT )
+    return View_Table.create_frame_rows( View_Table.ELEMENT_PARENT )
+
+  @staticmethod
+  def remove_frame( append: CTkFrame = None ):
+    if append is not None:
+      append.destroy()

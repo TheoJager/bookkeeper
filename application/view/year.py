@@ -21,7 +21,7 @@ class View_Year:
       s = Elements.label( append, "0.00", 3, row, (10, 0), W20 )
       p = Elements.label( append, "0.00", 4, row, (10, 0), W20 )
       Elements.label( append, "%", 5, row, (10, 10), W20 )
-      Elements.button( append, "@", lambda ctr_id = ctr_id: View_Table.update_rows_year( ctr_id ), 6, row, (20, 20), W20 ).configure( width = 25 )
+      Elements.button( append, "@", lambda ctr_id = ctr_id: View_Table.update_category_year( ctr_id ), 6, row, (20, 20) ).configure( width = 25 )
 
       s.configure( anchor = "e", width = 60 )
       p.configure( anchor = "e", width = 60 )

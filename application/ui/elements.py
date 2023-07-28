@@ -1,4 +1,5 @@
 from customtkinter import *
+from application.constants import W20
 
 
 class Elements:
@@ -21,19 +22,19 @@ class Elements:
     return element
 
   @staticmethod
-  def title( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkLabel:
+  def title( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = W20, pady: int = W20 ) -> CTkLabel:
     return Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 24, weight = "bold" ) ), column, row, 1, 1, padx, pady )
 
   @staticmethod
-  def header( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkLabel:
+  def header( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = W20, pady: int = W20 ) -> CTkLabel:
     element = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 13, weight = "bold" ) ), column, row, 1, 1, padx, pady )
     element.grid( sticky = "nsw" )
     element.configure( anchor = "w" )
     return element
 
   @staticmethod
-  def label( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkLabel:
-    element = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 12 ) ), column, row, 1, 1, padx, pady )
+  def label( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = W20, pady: int = W20 ) -> CTkLabel:
+    element = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 13 ) ), column, row, 1, 1, padx, pady )
     element.grid( sticky = "nsw" )
     element.configure( anchor = "w" )
     return element
@@ -45,7 +46,7 @@ class Elements:
     return element
 
   @staticmethod
-  def button( append: CTkBaseClass, text: str, command: callable, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkButton:
+  def button( append: CTkBaseClass, text: str, command: callable, column: int = 0, row: int = 0, padx: int = W20, pady: int = W20 ) -> CTkButton:
     return Elements.grid( CTkButton( append, text = text, command = command ), column, row, 1, 1, padx, pady )
 
   @staticmethod

@@ -29,6 +29,7 @@ def _rollover_months( year: int, month: int ) -> list:
 
   return [ year, month ]
 
+
 def _rollover_days( year: int, month: int, day: int ) -> list:
   if day > 28:
     days_in_month = get_days_in_month( year, month )

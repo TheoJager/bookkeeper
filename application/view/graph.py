@@ -1,10 +1,9 @@
 import math
 
 from customtkinter import CTkFrame
-from application.constants import W20
 from application.ui.elements import Elements
 from application.database.database_categories import Database_Categories
-from database.database_mutations import Database_Mutations
+from application.database.database_mutations import Database_Mutations
 
 
 class View_Graph:
@@ -12,7 +11,7 @@ class View_Graph:
 
   @staticmethod
   def create_header( append: CTkFrame, column: int, name: str ):
-    header = Elements.header( append, name, column, 0, (2, 0), W20 )
+    header = Elements.header( append, name, column, 0, (2, 0) )
     header.grid( columnspan = 12 )
 
   @staticmethod
@@ -23,7 +22,7 @@ class View_Graph:
 
   @staticmethod
   def create_spacer( append: CTkFrame, column: int ):
-    spacer = Elements.label( append, " ", column, 1, W20, W20 )
+    spacer = Elements.label( append, " ", column, 1 )
     spacer.grid( rowspan = 2 )
 
   @staticmethod
@@ -53,7 +52,7 @@ class View_Graph:
 
       bars = View_Graph.ELEMENTS[ category[ "ctr_name" ] ]
       for i in bars:
-        bars[ i ].set( abs(amounts[ i ]) / maximum )
+        bars[ i ].set( abs( amounts[ i ] ) / maximum )
 
   @staticmethod
   def calculate_upper_limit( amounts ):

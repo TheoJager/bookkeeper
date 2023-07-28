@@ -1,7 +1,8 @@
 import locale
 import datetime
 
-from application.constants import W20, W10
+from application.constants import W10
+from application.view.table import View_Table
 from application.ui.elements import Elements
 from customtkinter import CTkFrame, CTkLabel
 
@@ -20,15 +21,21 @@ class Navigation:
     Navigation.MONTH = 1 if Navigation.MONTH + 1 > 12 else Navigation.MONTH + 1
     Navigation.update()
 
+    View_Table.update_month( Navigation.MONTH )
+
   @staticmethod
   def previous():
     Navigation.MONTH = 12 if Navigation.MONTH - 1 < 1 else Navigation.MONTH - 1
     Navigation.update()
 
+    View_Table.update_month( Navigation.MONTH )
+
   @staticmethod
   def current():
     Navigation.MONTH = Navigation.get_current_month()
     Navigation.update()
+
+    View_Table.update_month( Navigation.MONTH )
 
   @staticmethod
   def update():
@@ -54,13 +61,13 @@ class Navigation:
 
   @staticmethod
   def create_element_date( append: CTkFrame, column: int = 0, row: int = 0 ):
-    Navigation.ELEMENT = Elements.header( append, "januari 1970", column, row, W20, W20 )
+    Navigation.ELEMENT = Elements.header( append, "januari 1970", column, row )
 
   @staticmethod
   def create_navigation( append: CTkFrame, column: int = 0, row: int = 0 ):
     frame = Elements.frame( append, column, row )
     frame.configure( fg_color = "transparent" )
-    Elements.button_inverse( frame, "<<", Navigation.previous, 0, 0, W10, W10 ).configure( width = 40 )
+    Elements.button_inverse( frame, "<<", Navigation.previous, 0, 0, (20, 0), W10 ).configure( width = 40 )
     Elements.button_inverse( frame, "now", Navigation.current, 1, 0, W10, W10 ).configure( width = 40 )
     Elements.button_inverse( frame, ">>", Navigation.next, 2, 0, W10, W10 ).configure( width = 40 )
     Elements.label( frame, "", 3, 0, W10, W10 )

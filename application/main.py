@@ -9,6 +9,7 @@ from application.view.graph import View_Graph
 from application.view.month import View_Month
 from application.view.table import View_Table
 from application.view.navigation import Navigation
+from application.view.functions import view_update
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 
@@ -42,17 +43,6 @@ customtkinter.set_appearance_mode( "System" )  # Modes: "System" (standard), "Da
 customtkinter.set_default_color_theme( "green" )  # Themes: "blue" (standard), "green", "dark-blue"
 
 
-# RECALCULATE
-#############################
-
-def recalculate():
-  Navigation.update()
-  View_Bank.update()
-  View_Year.update()
-  View_Month.update()
-  View_Graph.update()
-
-
 class Bookkeeper( customtkinter.CTk ):
   def __init__( self ):
     super().__init__()
@@ -63,28 +53,24 @@ class Bookkeeper( customtkinter.CTk ):
     self.title( "Bookkeeper" )
     # self.attributes('-fullscreen', True)
 
-    w = 1600  # width for the Tk root
-    h = 800  # height for the Tk root
+    w = 1600
+    h = 800
 
-    # get screen width and height
-    ws = self.winfo_screenwidth()  # width of the screen
-    hs = self.winfo_screenheight()  # height of the screen
+    ws = self.winfo_screenwidth()
+    hs = self.winfo_screenheight()
 
-    # calculate x and y coordinates for the Tk root window
     x = (ws - w) / 2
     y = (hs - h) / 4
 
-    # set the dimensions of the screen
-    # and where it is placed
     self.geometry( '%dx%d+%d+%d' % (w, h, x, y) )
 
     # configure grid layout (4x4)
     #######################################
 
-    self.grid_columnconfigure( 0, weight = 1, minsize = 225 )  # sidebar
-    self.grid_columnconfigure( 1, weight = 2, minsize = 575 )  # amount year
-    self.grid_columnconfigure( 2, weight = 1, minsize = 400 )  # amount month
-    self.grid_columnconfigure( 3, weight = 1, minsize = 400 )  # table
+    self.grid_columnconfigure( 0, weight = 1, minsize = 200 )  # sidebar
+    self.grid_columnconfigure( 1, weight = 1, minsize = 500 )  # amount year
+    self.grid_columnconfigure( 2, weight = 1, minsize = 350 )  # amount month
+    self.grid_columnconfigure( 3, weight = 1, minsize = 450 )  # table
     self.grid_rowconfigure( (0, 1), weight = 1 )
 
     # FRAMES
@@ -94,8 +80,8 @@ class Bookkeeper( customtkinter.CTk ):
 
     frame_total = Elements.frame( self, 1, 0, 1, 1, W20, W20 )
     frame_month = Elements.frame( self, 2, 0, 1, 1, W20, W20 )
-    frame_table = Elements.frame( self, 3, 0, 1, 2, 20, 20 )
-    frame_graph = Elements.frame( self, 1, 1, 2, 1, W20, 20 )
+    frame_table = Elements.frame( self, 3, 0, 1, 1, 20, W20 )
+    frame_graph = Elements.frame( self, 1, 1, 3, 1, 20, 20 )
 
     # ELEMENTS
     #######################################
@@ -103,56 +89,36 @@ class Bookkeeper( customtkinter.CTk ):
     # sidebar
     #############################
 
-    # title
-    ###################
+    Elements.title( frame_sidebar, "Bookkeeper", 0, 0, (10, 0), W20 )
 
-    Elements.title( frame_sidebar, "Bookkeeper", 0, 0, W20, W20 )
-
-    # upload mutations
-    #############################
-
-    Elements.button( frame_sidebar, "Upload CSV", csv_to_database, 0, 1, 20, W20 )
-    Elements.button( frame_sidebar, "Refresh", recalculate, 0, 2, 20, W20 )
-
-    # current month
-    # month navigation
-    #############################
+    Elements.button( frame_sidebar, "Upload CSV", csv_to_database, 0, 1, 20 )
 
     Navigation.create_element_date( frame_sidebar, 0, 3 )
     Navigation.create_navigation( frame_sidebar, 0, 4 )
 
-    # current bank total
-    #############################
-
     View_Bank.create( frame_sidebar, 0, 5 )
 
     # amounts
-    #######################################
-
-    # totals
     #############################
 
     View_Year.create( frame_total )
 
-    # this month
-    #############################
-
     View_Month.create( frame_month )
 
-    # create table
+    # table
     #######################################
 
-    View_Table.create_headers( frame_table )
+    View_Table.create( frame_table, Navigation.MONTH )
 
     # graphs
     #######################################
 
     View_Graph.create( frame_graph )
 
-    # recalculate
+    # update
     #######################################
 
-    recalculate()
+    view_update()
 
 
 if __name__ == '__main__':

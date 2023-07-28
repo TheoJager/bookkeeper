@@ -38,7 +38,7 @@ class Database_Categories:
 
   @staticmethod
   def select() -> list:
-    sql = 'SELECT * FROM categories ORDER BY ctr_id ASC'
+    sql = 'SELECT * FROM categories ORDER BY ctr_id'
     return Database.query( sql )
 
   @staticmethod

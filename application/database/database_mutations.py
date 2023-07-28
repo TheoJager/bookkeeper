@@ -1,7 +1,7 @@
 import datetime
 
 from typing import Dict
-from date.date import date
+from application.date.date import date
 from application.database.database import Database
 
 
@@ -167,9 +167,41 @@ class Database_Mutations:
     return response
 
   @staticmethod
-  def select_category_month( category: int, month: int ) -> list:
+  def select_month( month: int ) -> list:
+    x = datetime.datetime.now()
+    current_month = int( x.strftime( "%m" ) )
+
     x = datetime.datetime.now()
     year = int( x.strftime( "%Y" ) )
+    year = year - 1 if month > current_month else year
+
+    mts_date_start = date( year, month, 1 )
+    mts_date_end = date( year, month + 1, 1 )
+
+    sql = """
+      SELECT 
+        ctr_name, 
+        mutations.*
+      FROM 
+        mutations 
+        LEFT JOIN categories USING(ctr_id)
+      WHERE mts_date >= :mts_date_start 
+        AND mts_date <  :mts_date_end
+      ORDER BY 
+        mts_date DESC
+    """
+
+    record = { "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
+    return Database.query( sql, record )
+
+  @staticmethod
+  def select_category_month( category: int, month: int ) -> list:
+    x = datetime.datetime.now()
+    current_month = int( x.strftime( "%m" ) )
+
+    x = datetime.datetime.now()
+    year = int( x.strftime( "%Y" ) )
+    year = year - 1 if month > current_month else year
 
     mts_date_start = date( year, month, 1 )
     mts_date_end = date( year, month + 1, 1 )
