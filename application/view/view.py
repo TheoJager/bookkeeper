@@ -1,9 +1,9 @@
-from application.view.bank import View_Bank
-from application.view.date import View_Date
-from application.view.year import View_Year
-from application.view.table import View_Table
-from application.view.graph import View_Graph
-from application.view.month import View_Month
+from application.view.view_bank import View_Bank
+from application.view.view_date import View_Date
+from application.view.view_year import View_Year
+from application.view.view_table import View_Table
+from application.view.view_graph import View_Graph
+from application.view.view_month import View_Month
 
 
 class View:

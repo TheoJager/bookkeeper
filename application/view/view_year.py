@@ -1,6 +1,6 @@
 from customtkinter import CTkFrame
 from application.ui.elements import Elements
-from application.view.table import View_Table
+from application.view.view_table import View_Table
 from application.constants import W20, W10, CATEGORY_INCOME
 from application.functions import format_amount, format_percentage
 from application.database.database_mutations import Database_Mutations

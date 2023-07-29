@@ -4,7 +4,7 @@ from application.constants import W20, W10, CATEGORY_INCOME
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 from application.functions import format_amount, format_percentage
-from application.view.table import View_Table
+from application.view.view_table import View_Table
 
 
 class View_Month:

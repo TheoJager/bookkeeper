@@ -6,13 +6,13 @@ from application.date.today import Today
 from application.ui.elements import Elements
 from application.csv.csv_upload import csv_to_database
 from application.view.view import View
-from application.view.bank import View_Bank
-from application.view.date import View_Date
-from application.view.year import View_Year
-from application.view.graph import View_Graph
-from application.view.month import View_Month
-from application.view.table import View_Table
-from application.view.navigation import Navigation
+from application.view.view_bank import View_Bank
+from application.view.view_date import View_Date
+from application.view.view_year import View_Year
+from application.view.view_graph import View_Graph
+from application.view.view_month import View_Month
+from application.view.view_table import View_Table
+from application.view.view_navigation import Navigation
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 
