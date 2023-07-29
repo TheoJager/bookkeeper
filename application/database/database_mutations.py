@@ -1,11 +1,35 @@
-import datetime
-
 from typing import Dict
 from application.date.date import date
+from application.date.today import Today
 from application.database.database import Database
 
 
 class Database_Mutations:
+  SUM_CATEGORY_DATE = """
+    SELECT 
+      sum(mts_amount) as mts_total
+    FROM 
+      mutations 
+    WHERE ctr_id    = :ctr_id 
+      AND mts_date >= :mts_date_start 
+      AND mts_date <  :mts_date_end
+    ORDER BY 
+      mts_date DESC
+  """
+
+  SELECT_CATEGORY_DATE = """
+    SELECT 
+      ctr_name, 
+      mutations.*
+    FROM 
+      mutations 
+      LEFT JOIN categories USING(ctr_id)
+    WHERE ctr_id    = :ctr_id 
+      AND mts_date >= :mts_date_start 
+      AND mts_date <  :mts_date_end
+    ORDER BY 
+      mts_date DESC
+  """
 
   @staticmethod
   def create_table_if_not_exists():
@@ -97,70 +121,37 @@ class Database_Mutations:
 
   @staticmethod
   def sum_category_year( category: int ) -> float:
-    x = datetime.datetime.now()
-    month = int( x.strftime( "%m" ) )
-
-    x = datetime.datetime.now()
-    year = int( x.strftime( "%Y" ) )
+    month = Today.month()
+    year = Today.year()
 
     mts_date_start = date( year - 1, month + 1, 1 )
     mts_date_end = date( year, month + 1, 1 )
 
-    sql = """
-      SELECT 
-        sum(mts_amount) as mts_total
-      FROM 
-        mutations 
-      WHERE ctr_id    = :ctr_id 
-        AND mts_date >= :mts_date_start 
-        AND mts_date <  :mts_date_end
-      ORDER BY 
-        mts_date DESC
-    """
-
     record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    mts_total = Database.query( sql, record )
+    mts = Database.query( Database_Mutations.SUM_CATEGORY_DATE, record )
 
-    return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
-
-  @staticmethod
-  def sum_category_current_month( category: int ) -> float:
-    x = datetime.datetime.now()
-    month = int( x.strftime( "%m" ) )
-
-    return Database_Mutations.sum_category_month( category, month )
+    mts_total = mts[ 0 ][ "mts_total" ]
+    return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
   def sum_category_month( category: int, month: int ) -> float:
-    x = datetime.datetime.now()
-    current_month = int( x.strftime( "%m" ) )
-
-    x = datetime.datetime.now()
-    year = int( x.strftime( "%Y" ) )
-    year = year - 1 if month > current_month else year
+    year = Today.year() - (1 if month > Today.month() else 0)
 
     mts_date_start = date( year, month, 1 )
     mts_date_end = date( year, month + 1, 1 )
 
-    sql = """
-      SELECT 
-        sum(mts_amount) as mts_total
-      FROM 
-        mutations 
-      WHERE ctr_id    = :ctr_id 
-        AND mts_date >= :mts_date_start 
-        AND mts_date <  :mts_date_end
-      ORDER BY 
-        mts_date DESC
-    """
-
     record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    mts_total = Database.query( sql, record )
+    mts = Database.query( Database_Mutations.SUM_CATEGORY_DATE, record )
 
-    return round( mts_total[ 0 ][ "mts_total" ] if mts_total[ 0 ][ "mts_total" ] is not None else 0, 2 )
+    mts_total = mts[ 0 ][ "mts_total" ]
+    return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
-  def list_sum_category_month( category: int ):
+  def sum_category_current_month( category: int ) -> float:
+    return Database_Mutations.sum_category_month( category, Today.month() )
+
+  @staticmethod
+  def sum_category_months( category: int ) -> list:
     response = [ ]
     for i in range( 12 ):
       response.append( Database_Mutations.sum_category_month( category, i + 1 ) )
@@ -168,12 +159,7 @@ class Database_Mutations:
 
   @staticmethod
   def select_month( month: int ) -> list:
-    x = datetime.datetime.now()
-    current_month = int( x.strftime( "%m" ) )
-
-    x = datetime.datetime.now()
-    year = int( x.strftime( "%Y" ) )
-    year = year - 1 if month > current_month else year
+    year = Today.year() - (1 if month > Today.month() else 0)
 
     mts_date_start = date( year, month, 1 )
     mts_date_end = date( year, month + 1, 1 )
@@ -196,57 +182,21 @@ class Database_Mutations:
 
   @staticmethod
   def select_category_month( category: int, month: int ) -> list:
-    x = datetime.datetime.now()
-    current_month = int( x.strftime( "%m" ) )
-
-    x = datetime.datetime.now()
-    year = int( x.strftime( "%Y" ) )
-    year = year - 1 if month > current_month else year
+    year = Today.year() - (1 if month > Today.month() else 0)
 
     mts_date_start = date( year, month, 1 )
     mts_date_end = date( year, month + 1, 1 )
 
-    sql = """
-      SELECT 
-        ctr_name, 
-        mutations.*
-      FROM 
-        mutations 
-        LEFT JOIN categories USING(ctr_id)
-      WHERE ctr_id    = :ctr_id 
-        AND mts_date >= :mts_date_start 
-        AND mts_date <  :mts_date_end
-      ORDER BY 
-        mts_date DESC
-    """
-
     record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    return Database.query( sql, record )
+    return Database.query( Database_Mutations.SELECT_CATEGORY_DATE, record )
 
   @staticmethod
   def select_category_year( category: int ) -> list:
-    x = datetime.datetime.now()
-    month = int( x.strftime( "%m" ) )
-
-    x = datetime.datetime.now()
-    year = int( x.strftime( "%Y" ) )
+    month = Today.month()
+    year = Today.year()
 
     mts_date_start = date( year - 1, month + 1, 1 )
     mts_date_end = date( year, month + 1, 1 )
 
-    sql = """
-      SELECT 
-        ctr_name, 
-        mutations.*
-      FROM 
-        mutations 
-        LEFT JOIN categories USING(ctr_id)
-      WHERE ctr_id    = :ctr_id 
-        AND mts_date >= :mts_date_start 
-        AND mts_date <  :mts_date_end
-      ORDER BY 
-        mts_date DESC
-    """
-
     record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    return Database.query( sql, record )
+    return Database.query( Database_Mutations.SELECT_CATEGORY_DATE, record )

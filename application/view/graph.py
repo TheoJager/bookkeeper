@@ -47,7 +47,7 @@ class View_Graph:
   @staticmethod
   def update():
     for category in Database_Categories.select():
-      amounts = Database_Mutations.list_sum_category_month( category[ "ctr_id" ] )
+      amounts = Database_Mutations.sum_category_months( category[ "ctr_id" ] )
       maximum = View_Graph.calculate_upper_limit( amounts )
 
       bars = View_Graph.ELEMENTS[ category[ "ctr_name" ] ]

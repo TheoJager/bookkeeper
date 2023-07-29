@@ -24,8 +24,6 @@ from application.database.database_categories import Database_Categories
 
 # @TODO bedragen deze maand
 # @TODO aanklikbare staven
-# @TODO overzicht deze maand
-# @TODO overzicht categorie dit jaar
 #######################################
 
 # DATABASE SETUP
