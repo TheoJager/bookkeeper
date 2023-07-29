@@ -4,7 +4,7 @@ import sqlite3
 
 from random import randrange
 from tkinter import filedialog
-from application.message.message import Message
+from application.ui.message import Message
 from application.database.database_mutations import Database_Mutations
 
 
