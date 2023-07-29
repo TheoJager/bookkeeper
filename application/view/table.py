@@ -14,7 +14,6 @@ class View_Table:
   def create( append: CTkFrame, month: int ):
     View_Table.ELEMENT_PARENT = append
     View_Table.create_headers()
-    View_Table.update_month( month )
 
   @staticmethod
   def create_frame_headers( append: CTkFrame ) -> CTkFrame:
@@ -63,7 +62,7 @@ class View_Table:
       row += 1
 
   @staticmethod
-  def update_month( month: int ):
+  def update( month: int ):
     View_Table.update_rows( Database_Mutations.select_month( month ) )
 
   @staticmethod

@@ -1,15 +1,18 @@
+import locale
 import customtkinter
 
 from application.constants import W20
+from application.date.today import Today
 from application.ui.elements import Elements
 from application.csv.csv_upload import csv_to_database
+from application.view.view import View
 from application.view.bank import View_Bank
+from application.view.date import View_Date
 from application.view.year import View_Year
 from application.view.graph import View_Graph
 from application.view.month import View_Month
 from application.view.table import View_Table
 from application.view.navigation import Navigation
-from application.view.functions import view_update
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 
@@ -22,7 +25,6 @@ from application.database.database_categories import Database_Categories
 #######################################
 # pyinstaller --onefile --noconsole --icon=favicon.ico main.py
 
-# @TODO bedragen deze maand
 # @TODO aanklikbare staven
 #######################################
 
@@ -36,6 +38,8 @@ Database_Mutations.create_table_if_not_exists()
 
 # SETTINGS
 #######################################
+
+locale.setlocale( locale.LC_TIME, "nl_NL" )
 
 customtkinter.set_appearance_mode( "System" )  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme( "green" )  # Themes: "blue" (standard), "green", "dark-blue"
@@ -91,8 +95,10 @@ class Bookkeeper( customtkinter.CTk ):
 
     Elements.button( frame_sidebar, "Upload CSV", csv_to_database, 0, 1, 20 )
 
-    Navigation.create_element_date( frame_sidebar, 0, 3 )
-    Navigation.create_navigation( frame_sidebar, 0, 4 )
+    View_Date.create( frame_sidebar, 0, 3 )
+
+    Navigation.MONTH = Today.month()
+    Navigation.create( frame_sidebar, 0, 4 )
 
     View_Bank.create( frame_sidebar, 0, 5 )
 
@@ -101,7 +107,7 @@ class Bookkeeper( customtkinter.CTk ):
 
     View_Year.create( frame_total )
 
-    View_Month.create( frame_month )
+    View_Month.create( frame_month, Navigation.MONTH )
 
     # table
     #######################################
@@ -116,7 +122,8 @@ class Bookkeeper( customtkinter.CTk ):
     # update
     #######################################
 
-    view_update()
+    View.initiate()
+    View.update( Navigation.MONTH )
 
 
 if __name__ == '__main__':

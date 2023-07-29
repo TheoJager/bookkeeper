@@ -147,8 +147,8 @@ class Database_Mutations:
     return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
-  def sum_category_current_month( category: int ) -> float:
-    return Database_Mutations.sum_category_month( category, Today.month() )
+  def sum_category_current_month( category: int, month: int ) -> float:
+    return Database_Mutations.sum_category_month( category, month )
 
   @staticmethod
   def sum_category_months( category: int ) -> list:
