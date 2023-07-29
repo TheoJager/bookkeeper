@@ -1,5 +1,6 @@
 import locale
 import customtkinter
+import application.globals as glb
 
 from application.constants import W20
 from application.date.today import Today
@@ -43,7 +44,6 @@ locale.setlocale( locale.LC_TIME, "nl_NL" )
 
 customtkinter.set_appearance_mode( "System" )  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme( "green" )  # Themes: "blue" (standard), "green", "dark-blue"
-
 
 class Bookkeeper( customtkinter.CTk ):
   def __init__( self ):
@@ -90,6 +90,7 @@ class Bookkeeper( customtkinter.CTk ):
 
     # sidebar
     #############################
+    glb.SELECTED_MONTH = Today.month()
 
     Elements.title( frame_sidebar, "Bookkeeper", 0, 0, (10, 0), W20 )
 
@@ -97,7 +98,6 @@ class Bookkeeper( customtkinter.CTk ):
 
     View_Date.create( frame_sidebar, 0, 3 )
 
-    Navigation.MONTH = Today.month()
     Navigation.create( frame_sidebar, 0, 4 )
 
     View_Bank.create( frame_sidebar, 0, 5 )
@@ -107,12 +107,12 @@ class Bookkeeper( customtkinter.CTk ):
 
     View_Year.create( frame_total )
 
-    View_Month.create( frame_month, Navigation.MONTH )
+    View_Month.create( frame_month )
 
     # table
     #######################################
 
-    View_Table.create( frame_table, Navigation.MONTH )
+    View_Table.create( frame_table )
 
     # graphs
     #######################################
@@ -123,7 +123,7 @@ class Bookkeeper( customtkinter.CTk ):
     #######################################
 
     View.initiate()
-    View.update( Navigation.MONTH )
+    View.update( glb.SELECTED_MONTH )
 
 
 if __name__ == '__main__':

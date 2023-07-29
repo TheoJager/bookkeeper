@@ -11,7 +11,7 @@ class View_Table:
   ELEMENT_PARENT: CTkFrame = None
 
   @staticmethod
-  def create( append: CTkFrame, month: int ):
+  def create( append: CTkFrame ):
     View_Table.ELEMENT_PARENT = append
     View_Table.create_headers()
 

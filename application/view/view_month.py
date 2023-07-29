@@ -1,3 +1,5 @@
+import application.globals as glb
+
 from customtkinter import CTkFrame
 from application.ui.elements import Elements
 from application.constants import W20, W10, CATEGORY_INCOME
@@ -11,7 +13,7 @@ class View_Month:
   ELEMENTS = { }
 
   @staticmethod
-  def create( append: CTkFrame, month: int ):
+  def create( append: CTkFrame ):
     row = 0
     for category in Database_Categories.select():
       ctr_id = category[ "ctr_id" ]
@@ -20,7 +22,7 @@ class View_Month:
       s = Elements.label( append, "0.00", 2, row, W10, W20 )
       p = Elements.label( append, "0.00", 3, row, W10, W20 )
       Elements.label( append, "%", 4, row, (10, 10), W20 )
-      Elements.button( append, "@", lambda ctr_id = ctr_id: View_Table.update_category_month( ctr_id, month ), 5, row, (20, 20) ).configure( width = 25 )
+      Elements.button( append, "@", lambda ctr_id = ctr_id: View_Table.update_category_month( ctr_id, glb.SELECTED_MONTH ), 5, row, (20, 20) ).configure( width = 25 )
 
       s.configure( anchor = "e", width = 60 )
       p.configure( anchor = "e", width = 60 )
