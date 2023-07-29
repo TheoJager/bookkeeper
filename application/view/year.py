@@ -1,7 +1,7 @@
 from customtkinter import CTkFrame
 from application.ui.elements import Elements
 from application.view.table import View_Table
-from application.constants import W20, CATEGORY_INCOME
+from application.constants import W20, W10, CATEGORY_INCOME
 from application.functions import format_amount, format_percentage
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
@@ -18,8 +18,8 @@ class View_Year:
 
       Elements.label( append, category[ "ctr_name" ], 1, row, W20, W20 ).configure( anchor = "w", width = 125 )
       Elements.label( append, "€", 2, row, W20, W20 )
-      s = Elements.label( append, "0.00", 3, row, (10, 0), W20 )
-      p = Elements.label( append, "0.00", 4, row, (10, 0), W20 )
+      s = Elements.label( append, "0.00", 3, row, W10, W20 )
+      p = Elements.label( append, "0.00", 4, row, W10, W20 )
       Elements.label( append, "%", 5, row, (10, 10), W20 )
       Elements.button( append, "@", lambda ctr_id = ctr_id: View_Table.update_category_year( ctr_id ), 6, row, (20, 20) ).configure( width = 25 )
 

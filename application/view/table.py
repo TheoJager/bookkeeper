@@ -1,7 +1,5 @@
 from typing import Dict
-
 from customtkinter import CTkFrame
-
 from application.constants import W20, W10
 from application.functions import format_amount
 from application.ui.elements import Elements
@@ -27,16 +25,9 @@ class View_Table:
   @staticmethod
   def create_frame_rows( append: CTkFrame ) -> CTkFrame:
     frame = Elements.scroll( append, 0, 2 )
-    frame.configure( width = 400, height = 290, fg_color = "transparent" )
+    frame.configure( width = 400, fg_color = "transparent", height = 290 )
     View_Table.ELEMENT = frame
     return frame
-
-  @staticmethod
-  def create_headers():
-    View_Table.create_row(
-      View_Table.create_frame_headers( View_Table.ELEMENT_PARENT ),
-      [ "date", "product", "category", "", "amount" ],
-      0, (20, 10) )
 
   @staticmethod
   def create_row( append: CTkFrame, record: Dict, row: int, pady: int ):
@@ -48,11 +39,18 @@ class View_Table:
     Elements.label( append, val5, 4, row, W10, pady ).configure( width = 40, anchor = "e" )
 
   @staticmethod
-  def update_rows( records: callable ):
+  def create_headers():
+    View_Table.create_row(
+      View_Table.create_frame_headers( View_Table.ELEMENT_PARENT ),
+      [ "date", "product", "category", "", "amount" ],
+      0, (20, 10) )
+
+  @staticmethod
+  def update_rows( records: Dict ):
     append = View_Table.reset_frame_rows()
 
     row = 0
-    for record in records():
+    for record in records:
       data = [
         record[ "mts_date" ],
         "src_name",
@@ -66,15 +64,15 @@ class View_Table:
 
   @staticmethod
   def update_month( month: int ):
-    View_Table.update_rows( lambda: Database_Mutations.select_month( month ) )
+    View_Table.update_rows( Database_Mutations.select_month( month ) )
 
   @staticmethod
   def update_category_month( ctr_id: int, month: int ):
-    View_Table.update_rows( lambda: Database_Mutations.select_category_month( ctr_id, month ) )
+    View_Table.update_rows( Database_Mutations.select_category_month( ctr_id, month ) )
 
   @staticmethod
   def update_category_year( ctr_id: int ):
-    View_Table.update_rows( lambda: Database_Mutations.select_category_year( ctr_id ) )
+    View_Table.update_rows( Database_Mutations.select_category_year( ctr_id ) )
 
   @staticmethod
   def reset_frame_rows():

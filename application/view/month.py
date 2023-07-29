@@ -1,6 +1,6 @@
 from customtkinter import CTkFrame
 from application.ui.elements import Elements
-from application.constants import W20, CATEGORY_INCOME
+from application.constants import W20, W10, CATEGORY_INCOME
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 from application.functions import format_amount, format_percentage
@@ -18,8 +18,8 @@ class View_Month:
       ctr_id = category[ "ctr_id" ]
 
       Elements.label( append, "€", 1, row, W20, W20 )
-      s = Elements.label( append, "0.00", 2, row, (10, 0), W20 )
-      p = Elements.label( append, "0.00", 3, row, (10, 0), W20 )
+      s = Elements.label( append, "0.00", 2, row, W10, W20 )
+      p = Elements.label( append, "0.00", 3, row, W10, W20 )
       Elements.label( append, "%", 4, row, (10, 10), W20 )
       Elements.button( append, "@", lambda ctr_id = ctr_id: View_Table.update_category_month( ctr_id, Navigation.MONTH ), 5, row, (20, 20) ).configure( width = 25 )
 
