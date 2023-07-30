@@ -82,8 +82,18 @@ class Database_Mutations:
         'mts_amount'     : record[ 'mts_start' ],
         'mts_start'      : 0,
         'mts_description': 'start',
-        'ctr_id'         : 8,
+        'ctr_id'         : 0,
       } )
+
+  @staticmethod
+  def select_month( month: int ) -> list:
+    year = Today.year() - (1 if month > Today.month() else 0)
+
+    record = {
+      "mts_date_start": date( year, month ),
+      "mts_date_end"  : date( year, month + 1 )
+    }
+    return Database.query( Database_Mutations.SELECT_DATE, record )
 
   @staticmethod
   def sum() -> float:
@@ -95,73 +105,63 @@ class Database_Mutations:
     return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
-  def sum_category_year( category: int ) -> float:
-    month = Today.month()
+  def select_category_year( ctr_id: int ) -> list:
     year = Today.year()
+    month = Today.month()
 
-    mts_date_start = date( year - 1, month + 1, 1 )
-    mts_date_end = date( year, month + 1, 1 )
+    record = {
+      "ctr_id"        : ctr_id,
+      "mts_date_start": date( year - 1, month + 1 ),
+      "mts_date_end"  : date( year - 0, month + 1 )
+    }
+    return Database.query( Database_Mutations.SELECT_CATEGORY_DATE, record )
 
-    record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
+  @staticmethod
+  def sum_category_year( ctr_id: int ) -> float:
+    year = Today.year()
+    month = Today.month()
+
+    record = {
+      "ctr_id"        : ctr_id,
+      "mts_date_start": date( year - 1, month + 1 ),
+      "mts_date_end"  : date( year - 0, month + 1 )
+    }
     mts = Database.query( Database_Mutations.SUM_CATEGORY_DATE, record )
 
     mts_total = mts[ 0 ][ "mts_total" ]
     return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
-  def sum_category_month( category: int, month: int ) -> float:
+  def select_category_month( ctr_id: int, month: int ) -> list:
     year = Today.year() - (1 if month > Today.month() else 0)
 
-    mts_date_start = date( year, month, 1 )
-    mts_date_end = date( year, month + 1, 1 )
+    record = {
+      "ctr_id"        : ctr_id,
+      "mts_date_start": date( year, month ),
+      "mts_date_end"  : date( year, month + 1 )
+    }
+    return Database.query( Database_Mutations.SELECT_CATEGORY_DATE, record )
 
-    record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
+  @staticmethod
+  def sum_category_month( ctr_id: int, month: int ) -> float:
+    year = Today.year() - (1 if month > Today.month() else 0)
+
+    record = {
+      "ctr_id"        : ctr_id,
+      "mts_date_start": date( year, month ),
+      "mts_date_end"  : date( year, month + 1 )
+    }
     mts = Database.query( Database_Mutations.SUM_CATEGORY_DATE, record )
 
     mts_total = mts[ 0 ][ "mts_total" ]
     return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
-  def sum_category_current_month( category: int, month: int ) -> float:
-    return Database_Mutations.sum_category_month( category, month )
-
-  @staticmethod
-  def sum_category_months( category: int ) -> list:
+  def sum_category_months( ctr_id: int ) -> list:
     response = [ ]
     for i in range( 12 ):
-      response.append( Database_Mutations.sum_category_month( category, i + 1 ) )
+      response.append( Database_Mutations.sum_category_month( ctr_id, i + 1 ) )
     return response
-
-  @staticmethod
-  def select_month( month: int ) -> list:
-    year = Today.year() - (1 if month > Today.month() else 0)
-
-    mts_date_start = date( year, month, 1 )
-    mts_date_end = date( year, month + 1, 1 )
-
-    record = { "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    return Database.query( Database_Mutations.SELECT_DATE, record )
-
-  @staticmethod
-  def select_category_month( category: int, month: int ) -> list:
-    year = Today.year() - (1 if month > Today.month() else 0)
-
-    mts_date_start = date( year, month, 1 )
-    mts_date_end = date( year, month + 1, 1 )
-
-    record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    return Database.query( Database_Mutations.SELECT_CATEGORY_DATE, record )
-
-  @staticmethod
-  def select_category_year( category: int ) -> list:
-    month = Today.month()
-    year = Today.year()
-
-    mts_date_start = date( year - 1, month + 1, 1 )
-    mts_date_end = date( year, month + 1, 1 )
-
-    record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    return Database.query( Database_Mutations.SELECT_CATEGORY_DATE, record )
 
   SUM_CATEGORY_DATE = """
     SELECT 

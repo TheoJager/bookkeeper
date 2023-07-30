@@ -14,7 +14,7 @@ def get_days_in_month( year, month ) -> int:
   return DAYS_IN_MONTH[ month ]
 
 
-def date( year: int, month: int, day: int ) -> str:
+def date( year: int, month: int = 1, day: int = 1 ) -> str:
   year, month = _rollover_months( year, month )
   year, month, day = _rollover_days( year, month, day )
 

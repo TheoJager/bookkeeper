@@ -32,10 +32,10 @@ class View_Month:
 
   @staticmethod
   def update( month: int ):
-    income = Database_Mutations.sum_category_current_month( CATEGORY_INCOME, month )
+    income = Database_Mutations.sum_category_month( CATEGORY_INCOME, month )
 
     for category in Database_Categories.select():
-      current = Database_Mutations.sum_category_current_month( category[ "ctr_id" ], month )
+      current = Database_Mutations.sum_category_month( category[ "ctr_id" ], month )
       percent = View_Month.calculate_percentage( current, income )
 
       s, p = View_Month.ELEMENTS[ category[ "ctr_name" ] ]
