@@ -12,10 +12,10 @@ class View:
   def initiate():
     View_Bank.update()
     View_Year.update()
-    View_Graph.update()
 
   @staticmethod
   def update( month: int ):
+    View_Graph.update( month )
     View_Date.update( month )
     View_Month.update( month )
     View_Table.update( month )

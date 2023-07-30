@@ -1,9 +1,12 @@
 import math
 
-from customtkinter import CTkFrame
+from customtkinter import CTkFrame, CTkProgressBar
 from application.ui.elements import Elements
-from application.database.database_categories import Database_Categories
+from application.view.view_date import View_Date
+from application.view.view_month import View_Month
+from application.view.view_table import View_Table
 from application.database.database_mutations import Database_Mutations
+from application.database.database_categories import Database_Categories
 
 
 class View_Graph:
@@ -21,6 +24,12 @@ class View_Graph:
     return progressbar
 
   @staticmethod
+  def register_bar( bar: CTkProgressBar, name: str, i: int ):
+    View_Graph.ELEMENTS[ name ] = View_Graph.ELEMENTS[ name ] if name in View_Graph.ELEMENTS else { }
+    View_Graph.ELEMENTS[ name ][ i ] = bar
+    return bar
+
+  @staticmethod
   def create_spacer( append: CTkFrame, column: int ):
     spacer = Elements.label( append, " ", column, 1 )
     spacer.grid( rowspan = 2 )
@@ -35,24 +44,38 @@ class View_Graph:
 
     for category in Database_Categories.select():
       View_Graph.create_header( append, column, category[ "ctr_name" ] )
+
+      amounts = Database_Mutations.sum_category_months( category[ "ctr_id" ] )
+      maximum = View_Graph.calculate_upper_limit( amounts )
+
       column += 1
       for i in range( 12 ):
-        View_Graph.ELEMENTS[ category[ "ctr_name" ] ] = View_Graph.ELEMENTS[ category[ "ctr_name" ] ] if category[ "ctr_name" ] in View_Graph.ELEMENTS else { }
-        View_Graph.ELEMENTS[ category[ "ctr_name" ] ][ i ] = View_Graph.create_bars( append, column, i )
+        bar = View_Graph.register_bar( View_Graph.create_bars( append, column, i ), category[ "ctr_name" ], i )
+        bar.set( abs( amounts[ i ] ) / maximum )
+
+        button = Elements.button( append, " ", lambda i = i: View_Graph.update_screen( i + 1 ), column, 2, 0, 0 )
+        button.configure( width = 1, height = 1, corner_radius = 0 )
         column += 1
 
       View_Graph.create_spacer( append, column )
       column += 1
 
   @staticmethod
-  def update():
-    for category in Database_Categories.select():
-      amounts = Database_Mutations.sum_category_months( category[ "ctr_id" ] )
-      maximum = View_Graph.calculate_upper_limit( amounts )
+  def update_screen( month: int ):
+    View_Graph.update( month )
+    View_Date.update( month )
+    View_Month.update( month )
+    View_Table.update( month )
 
+  @staticmethod
+  def update( month: int ):
+    for category in Database_Categories.select():
       bars = View_Graph.ELEMENTS[ category[ "ctr_name" ] ]
       for i in bars:
-        bars[ i ].set( abs( amounts[ i ] ) / maximum )
+        if i + 1 == month:
+          bars[ i ].configure( progress_color = "#A2972F" )
+        else:
+          bars[ i ].configure( progress_color = "#2FA572" )
 
   @staticmethod
   def calculate_upper_limit( amounts ):

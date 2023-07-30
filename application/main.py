@@ -26,9 +26,6 @@ from application.database.database_categories import Database_Categories
 #######################################
 # pyinstaller --onefile --noconsole --icon=favicon.ico main.py
 
-# @TODO aanklikbare staven
-#######################################
-
 # DATABASE SETUP
 #######################################
 
