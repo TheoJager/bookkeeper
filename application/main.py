@@ -45,6 +45,8 @@ locale.setlocale( locale.LC_TIME, "nl_NL" )
 customtkinter.set_appearance_mode( "System" )  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme( "green" )  # Themes: "blue" (standard), "green", "dark-blue"
 
+glb.SELECTED_MONTH = Today.month()
+
 class Bookkeeper( customtkinter.CTk ):
   def __init__( self ):
     super().__init__()
@@ -90,7 +92,6 @@ class Bookkeeper( customtkinter.CTk ):
 
     # sidebar
     #############################
-    glb.SELECTED_MONTH = Today.month()
 
     Elements.title( frame_sidebar, "Bookkeeper", 0, 0, (10, 0), W20 )
 
