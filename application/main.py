@@ -4,6 +4,7 @@ import application.globals as glb
 
 from application.constants import W20
 from application.date.today import Today
+from application.screen.categorize import Categorize
 from application.ui.elements import Elements
 from application.csv.csv_upload import csv_to_database
 from application.view.view import View
@@ -99,6 +100,11 @@ class Bookkeeper( customtkinter.CTk ):
     Navigation.create( frame_sidebar, 0, 4 )
 
     View_Bank.create( frame_sidebar, 0, 5 )
+
+    def open_categorize():
+      Categorize().mainloop()
+
+    Elements.button( frame_sidebar, "Categorize", open_categorize, 0, 6, 20 )
 
     # amounts
     #############################
