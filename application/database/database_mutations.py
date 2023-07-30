@@ -5,31 +5,6 @@ from application.database.database import Database
 
 
 class Database_Mutations:
-  SUM_CATEGORY_DATE = """
-    SELECT 
-      sum(mts_amount) as mts_total
-    FROM 
-      mutations 
-    WHERE ctr_id    = :ctr_id 
-      AND mts_date >= :mts_date_start 
-      AND mts_date <  :mts_date_end
-    ORDER BY 
-      mts_date DESC
-  """
-
-  SELECT_CATEGORY_DATE = """
-    SELECT 
-      ctr_name, 
-      mutations.*
-    FROM 
-      mutations 
-      LEFT JOIN categories USING(ctr_id)
-    WHERE ctr_id    = :ctr_id 
-      AND mts_date >= :mts_date_start 
-      AND mts_date <  :mts_date_end
-    ORDER BY 
-      mts_date DESC
-  """
 
   @staticmethod
   def create_table_if_not_exists():
@@ -164,21 +139,8 @@ class Database_Mutations:
     mts_date_start = date( year, month, 1 )
     mts_date_end = date( year, month + 1, 1 )
 
-    sql = """
-      SELECT 
-        ctr_name, 
-        mutations.*
-      FROM 
-        mutations 
-        LEFT JOIN categories USING(ctr_id)
-      WHERE mts_date >= :mts_date_start 
-        AND mts_date <  :mts_date_end
-      ORDER BY 
-        mts_date DESC
-    """
-
     record = { "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
-    return Database.query( sql, record )
+    return Database.query( Database_Mutations.SELECT_DATE, record )
 
   @staticmethod
   def select_category_month( category: int, month: int ) -> list:
@@ -200,3 +162,42 @@ class Database_Mutations:
 
     record = { "ctr_id": category, "mts_date_start": mts_date_start, "mts_date_end": mts_date_end }
     return Database.query( Database_Mutations.SELECT_CATEGORY_DATE, record )
+
+  SUM_CATEGORY_DATE = """
+    SELECT 
+      sum(mts_amount) as mts_total
+    FROM 
+      mutations 
+    WHERE ctr_id    = :ctr_id 
+      AND mts_date >= :mts_date_start 
+      AND mts_date <  :mts_date_end
+    ORDER BY 
+      mts_date DESC
+  """
+
+  SELECT_DATE = """
+    SELECT 
+      ctr_name, 
+      mutations.*
+    FROM 
+      mutations 
+      LEFT JOIN categories USING(ctr_id)
+    WHERE mts_date >= :mts_date_start 
+      AND mts_date <  :mts_date_end
+    ORDER BY 
+      mts_date DESC
+  """
+
+  SELECT_CATEGORY_DATE = """
+    SELECT 
+      ctr_name, 
+      mutations.*
+    FROM 
+      mutations 
+      LEFT JOIN categories USING(ctr_id)
+    WHERE ctr_id    = :ctr_id 
+      AND mts_date >= :mts_date_start 
+      AND mts_date <  :mts_date_end
+    ORDER BY 
+      mts_date DESC
+  """
