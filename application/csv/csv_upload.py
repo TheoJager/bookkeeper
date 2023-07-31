@@ -1,6 +1,5 @@
 import re
 import csv
-import html
 import sqlite3
 
 from random import randrange
@@ -30,17 +29,24 @@ def csv_to_records( path: str ) -> list:
 
   records = [ ]
   for row in csv.DictReader( csv_file, delimiter = delimiter ):
-    records.append( {
-      'mts_date'       : row[ 'Transactiedatum' ],
-      'mts_amount'     : csv_convert_numbers( row[ 'Transactiebedrag' ] ),
-      'mts_start'      : csv_convert_numbers( row[ 'Beginsaldo' ] ),
-      'mts_description': html.escape( row[ 'Omschrijving' ] ),
-      'ctr_id'         : randrange( 1, 8 )
-    } )
+    record = {
+      'mts_date'  : row[ 'Transactiedatum' ],
+      'mts_amount': csv_convert_numbers( row[ 'Transactiebedrag' ] ),
+      'mts_start' : csv_convert_numbers( row[ 'Beginsaldo' ] ),
+      'mts_text'  : csv_sanitize( row[ 'Omschrijving' ] ),
+      'ctr_id'    : randrange( 1, 8 )
+    }
+    records.append( record )
 
   csv_file.close()
 
   return records
+
+
+def csv_sanitize( text: str ) -> str:
+  text = re.sub( r"[\t\r\n]+", ' ', text )
+  text = re.sub( r"\s+", ' ', text )
+  return text
 
 
 def csv_to_database():

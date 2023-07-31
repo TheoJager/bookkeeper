@@ -15,8 +15,8 @@ class Database_Mutations:
         mts_date integer, 
         mts_amount real, 
         mts_start real, 
-        mts_description text,
-        UNIQUE(mts_date,mts_amount,mts_start,mts_description)
+        mts_text text,
+        UNIQUE(mts_date,mts_amount,mts_start,mts_text)
       )
     """
     Database.query( sql )
@@ -39,13 +39,13 @@ class Database_Mutations:
         mts_date, 
         mts_amount, 
         mts_start, 
-        mts_description, 
+        mts_text, 
         ctr_id
       ) VALUES (
         :mts_date, 
         :mts_amount, 
         :mts_start, 
-        :mts_description, 
+        :mts_text, 
         :ctr_id
       )
     """
@@ -58,10 +58,10 @@ class Database_Mutations:
       UPDATE 
         mutations 
       SET 
-        mts_date        = :mts_date, 
-        mts_amount      = :mts_amount, 
-        mts_description = :mts_description, 
-        ctr_id          = :ctr_id
+        mts_date   = :mts_date, 
+        mts_amount = :mts_amount, 
+        mts_text   = :mts_text, 
+        ctr_id     = :ctr_id
       WHERE 
         mts_id = :mts_id
     """
@@ -78,11 +78,11 @@ class Database_Mutations:
   def insert_base_value( record: list ):
     if len( Database_Mutations.select() ) == 0:
       Database_Mutations.insert( {
-        'mts_date'       : "19700101",
-        'mts_amount'     : record[ 'mts_start' ],
-        'mts_start'      : 0,
-        'mts_description': 'start',
-        'ctr_id'         : 0,
+        'mts_date'  : "19700101",
+        'mts_amount': record[ 'mts_start' ],
+        'mts_start' : 0,
+        'mts_text'  : 'start',
+        'ctr_id'    : 0,
       } )
 
   @staticmethod
@@ -120,7 +120,7 @@ class Database_Mutations:
         AND mts_date >= :mts_date_start 
         AND mts_date <  :mts_date_end
       ORDER BY 
-        mts_description
+        mts_text
     """
 
     record = {

@@ -38,7 +38,7 @@ class View_Mutations:
         [ "in", "et", "bd", "ab", "ks", "sp", "sa" ],
         "€",
         format_amount( record[ "mts_amount" ] ),
-        record[ "mts_description" ]
+        record[ "mts_text" ]
       ]
 
       View_Mutations.create_row( append, data, row, 3, View_Mutations.set_category )

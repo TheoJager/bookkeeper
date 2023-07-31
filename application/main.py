@@ -3,6 +3,7 @@ import customtkinter
 import application.globals as glb
 
 from application.constants import W20
+from application.database.database_search import Database_Search
 from application.date.today import Today
 from application.screen.categorize import Categorize
 from application.ui.elements import Elements
@@ -34,6 +35,8 @@ Database_Categories.create_table_if_not_exists()
 Database_Categories.create_default_records()
 
 Database_Mutations.create_table_if_not_exists()
+
+Database_Search.create_table_if_not_exists()
 
 # SETTINGS
 #######################################
