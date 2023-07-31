@@ -36,7 +36,7 @@ class Elements:
   def label( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = W20, pady: int = W20 ) -> CTkLabel:
     element = Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 13 ) ), column, row, 1, 1, padx, pady )
     element.grid( sticky = "nsw" )
-    element.configure( anchor = "w" )
+    element.configure( anchor = "w", justify = "left" )
     return element
 
   @staticmethod
@@ -53,4 +53,10 @@ class Elements:
   def button_inverse( append: CTkBaseClass, text: str, command: callable, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkButton:
     element = Elements.grid( CTkButton( append, text = text, command = command ), column, row, 1, 1, padx, pady )
     element.configure( fg_color = "transparent", text_color = ("gray10", "#DCE4EE"), border_width = 1 )
+    return element
+
+  @staticmethod
+  def segmented_buttons( append: CTkBaseClass, values: list, command: callable, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkSegmentedButton:
+    element = CTkSegmentedButton( append, command = command, values = values )
+    element.grid( column = column, row = row, padx = padx, pady = pady )
     return element

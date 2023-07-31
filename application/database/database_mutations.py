@@ -105,6 +105,32 @@ class Database_Mutations:
     return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
+  def select_uncategorized_year() -> list:
+    year = Today.year()
+    month = Today.month()
+
+    sql = """
+      SELECT 
+        ctr_name, 
+        mutations.*
+      FROM 
+        mutations 
+        LEFT JOIN categories USING(ctr_id)
+      WHERE ctr_id    = :ctr_id 
+        AND mts_date >= :mts_date_start 
+        AND mts_date <  :mts_date_end
+      ORDER BY 
+        mts_description
+    """
+
+    record = {
+      "ctr_id"        : 0,
+      "mts_date_start": date( year - 1, month + 1 ),
+      "mts_date_end"  : date( year - 0, month + 1 )
+    }
+    return Database.query( sql, record )
+
+  @staticmethod
   def select_category_year( ctr_id: int ) -> list:
     year = Today.year()
     month = Today.month()

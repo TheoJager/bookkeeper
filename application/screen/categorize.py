@@ -1,5 +1,11 @@
 import customtkinter
 
+from application.constants import W20
+from application.ui.elements import Elements
+from application.view.view_mutations import View_Mutations
+
+customtkinter.set_appearance_mode( "System" )  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_default_color_theme( "green" )  # Themes: "blue" (standard), "green", "dark-blue"
 
 class Categorize( customtkinter.CTk ):
   def __init__( self ):
@@ -21,4 +27,33 @@ class Categorize( customtkinter.CTk ):
 
     self.geometry( '%dx%d+%d+%d' % (w, h, x, y) )
 
+    # configure grid layout (4x4)
+    #######################################
 
+    self.grid_columnconfigure( 1, weight = 1, minsize = 1100 )  # headers
+    self.grid_rowconfigure( 1, weight = 1 )
+
+    # FRAMES
+    #############################
+
+    frame_headers = Elements.frame( self, 1, 0, 1, 1, 20, W20 )
+    frame_records = Elements.scroll( self, 1, 1, 1, 1, 20, 20 )
+
+    frame_headers.configure( width = 500, height = 50 )
+
+    # ELEMENTS
+    #######################################
+
+    # headers
+    #############################
+
+    View_Mutations.create_headers( frame_headers )
+
+    # records
+    #############################
+
+    View_Mutations.create_records( frame_records )
+
+
+if __name__ == '__main__':
+  Categorize().mainloop()

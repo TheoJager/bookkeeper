@@ -1,12 +1,17 @@
 import sqlite3
 
 from typing import Dict
+from pathlib import Path
 
 
 class Database:
 
   @staticmethod
-  def dict_factory( cursor, row ):
+  def root( dir ) -> Path:
+    return [ p for p in dir.parents if p.parts[ -1 ] == 'application' ][ 0 ]
+
+  @staticmethod
+  def dict_factory( cursor, row ) -> Dict:
     d = { }
     for idx, col in enumerate( cursor.description ):
       d[ col[ 0 ] ] = row[ idx ]
@@ -14,7 +19,8 @@ class Database:
 
   @staticmethod
   def query( sql: str, variables: Dict = None ) -> list:
-    db = sqlite3.connect( 'bookkeeper.db' )
+    path = str( Database.root( Path( __file__ ) ).absolute() ).replace( '\\', '/' )
+    db = sqlite3.connect( path + '/bookkeeper.db' )
     db.row_factory = Database.dict_factory
 
     cursor = db.cursor()

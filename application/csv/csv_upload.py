@@ -1,5 +1,6 @@
 import re
 import csv
+import html
 import sqlite3
 
 from random import randrange
@@ -33,7 +34,7 @@ def csv_to_records( path: str ) -> list:
       'mts_date'       : row[ 'Transactiedatum' ],
       'mts_amount'     : csv_convert_numbers( row[ 'Transactiebedrag' ] ),
       'mts_start'      : csv_convert_numbers( row[ 'Beginsaldo' ] ),
-      'mts_description': row[ 'Omschrijving' ],
+      'mts_description': html.escape( row[ 'Omschrijving' ] ),
       'ctr_id'         : randrange( 1, 8 )
     } )
 
