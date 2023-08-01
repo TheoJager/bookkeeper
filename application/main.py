@@ -3,10 +3,9 @@ import customtkinter
 import application.globals as glb
 
 from application.constants import W20
-from application.database.database_search import Database_Search
 from application.date.today import Today
-from application.screen.categorize import Categorize
 from application.ui.elements import Elements
+from application.screen.search import Search
 from application.csv.csv_upload import csv_to_database
 from application.view.view import View
 from application.view.view_bank import View_Bank
@@ -16,6 +15,7 @@ from application.view.view_graph import View_Graph
 from application.view.view_month import View_Month
 from application.view.view_table import View_Table
 from application.view.view_navigation import Navigation
+from application.database.database_search import Database_Search
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 
@@ -104,10 +104,10 @@ class Bookkeeper( customtkinter.CTk ):
 
     View_Bank.create( frame_sidebar, 0, 5 )
 
-    def open_categorize():
-      Categorize().mainloop()
+    def open_searches():
+      Search().mainloop()
 
-    Elements.button( frame_sidebar, "Categorize", open_categorize, 0, 6, 20 )
+    Elements.button( frame_sidebar, "Searches", open_searches, 0, 6, 20 )
 
     # amounts
     #############################

@@ -7,7 +7,7 @@ from application.view.view_search import View_Search
 customtkinter.set_appearance_mode( "System" )  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme( "green" )  # Themes: "blue" (standard), "green", "dark-blue"
 
-class Uncategorized( customtkinter.CTk ):
+class Search( customtkinter.CTk ):
   def __init__( self ):
     super().__init__()
 
@@ -52,4 +52,4 @@ class Uncategorized( customtkinter.CTk ):
 
 
 if __name__ == '__main__':
-  Uncategorized().mainloop()
+  Search().mainloop()
