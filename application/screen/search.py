@@ -12,9 +12,10 @@ class Search( customtkinter.CTk ):
     super().__init__()
 
     # configure window
+    # https://stackoverflow.com/questions/26168967/invalid-command-name-while-executing-after-script
     #######################################
 
-    self.title( "Categorize" )
+    self.title( "Searches" )
 
     w = 1200
     h = 700
