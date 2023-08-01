@@ -82,7 +82,7 @@ class Database_Mutations:
         'mts_amount': record[ 'mts_start' ],
         'mts_start' : 0,
         'mts_text'  : 'start',
-        'ctr_id'    : 0,
+        'ctr_id'    : -1,
       } )
 
   @staticmethod
@@ -97,7 +97,7 @@ class Database_Mutations:
 
   @staticmethod
   def sum() -> float:
-    sql = "select sum(mts_amount) as mts_total from mutations"
+    sql = "SELECT sum(mts_amount) AS mts_total FROM mutations"
 
     mts = Database.query( sql )
 

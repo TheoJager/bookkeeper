@@ -10,10 +10,10 @@ class Database_Search:
       CREATE TABLE IF NOT EXISTS search (
         src_id integer primary key, 
         src_name text, 
-        src_match integer, 
+        src_match text, 
         src_text text,
         ctr_id integer, 
-        UNIQUE(src_text)
+        UNIQUE(src_match)
       )
     """
     Database.query( sql )
@@ -44,7 +44,6 @@ class Database_Search:
         :ctr_id
       )
     """
-
     Database.query( sql, record )
 
   @staticmethod
@@ -60,7 +59,6 @@ class Database_Search:
       WHERE 
         src_id = :src_id
     """
-
     Database.query( sql, record )
 
   @staticmethod
@@ -69,3 +67,45 @@ class Database_Search:
 
     record = { 'src_id': id }
     Database.query( sql, record )
+
+  @staticmethod
+  def select_unsearched():
+    sql = """
+      SELECT 
+        mts_id, 
+        mts_date, 
+        mts_amount, 
+        mts_text
+      FROM 
+        mutations
+      WHERE ctr_id >= 0
+        AND mts_id NOT IN (
+        SELECT 
+          mts_id
+        FROM 
+          mutations LEFT JOIN search
+        WHERE 
+          mts_text LIKE '%' || src_match || '%'
+        )
+      LIMIT 10
+    """
+    return Database.query( sql )
+
+  @staticmethod
+  def select_searched():
+    sql = """
+      SELECT 
+        mts_id, 
+        mts_date, 
+        mts_amount, 
+        mts_text,
+        src_name,
+        search.ctr_id
+      FROM 
+        mutations LEFT JOIN search
+      WHERE 
+        mts_text LIKE '%' || src_match || '%'
+      GROUP BY 
+        mts_id
+    """
+    return Database.query( sql )

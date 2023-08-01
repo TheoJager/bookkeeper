@@ -48,6 +48,13 @@ class Database_Categories:
     return Database.query( sql, record )
 
   @staticmethod
+  def record_by_name( name: str ) -> list:
+    sql = 'SELECT * FROM categories WHERE ctr_name = :ctr_name'
+
+    record = { 'ctr_name': name }
+    return Database.query( sql, record )
+
+  @staticmethod
   def insert( record: Dict ):
     sql = """
       INSERT INTO categories(
@@ -84,3 +91,10 @@ class Database_Categories:
 
     record = { 'ctr_id': id }
     Database.query( sql, record )
+
+  @staticmethod
+  def categories() -> list:
+    response = [ ]
+    for record in Database_Categories.select():
+      response.append( record[ "ctr_name" ] )
+    return response

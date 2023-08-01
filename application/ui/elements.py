@@ -22,6 +22,18 @@ class Elements:
     return element
 
   @staticmethod
+  def select( append: CTkBaseClass, values: list, column: int = 0, row: int = 0, padx: int = 0, pady: int = 0 ) -> CTkComboBox:
+    element = Elements.grid( CTkComboBox( append, values = values ), column, row, 1, 1, padx, pady )
+    return element
+
+  @staticmethod
+  def text( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = W20, pady: int = W20 ) -> CTkTextbox:
+    element = CTkTextbox( append )
+    element.grid( column = column, row = row, padx = padx, pady = pady, sticky = "nsew" )
+    element.insert( "0.0", text )
+    return element
+
+  @staticmethod
   def title( append: CTkBaseClass, text: str, column: int = 0, row: int = 0, padx: int = W20, pady: int = W20 ) -> CTkLabel:
     return Elements.grid( CTkLabel( append, text = text, font = CTkFont( size = 24, weight = "bold" ) ), column, row, 1, 1, padx, pady )
 
