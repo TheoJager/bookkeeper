@@ -4,8 +4,12 @@ from application.constants import W20
 from application.ui.elements import Elements
 from application.view.view_search import View_Search
 
+# SETTINGS
+#######################################
+
 customtkinter.set_appearance_mode( "System" )  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme( "green" )  # Themes: "blue" (standard), "green", "dark-blue"
+
 
 class Search( customtkinter.CTk ):
   def __init__( self ):
@@ -33,6 +37,7 @@ class Search( customtkinter.CTk ):
 
     self.grid_columnconfigure( 1, weight = 1, minsize = 1100 )  # headers
     self.grid_rowconfigure( 1, weight = 1 )
+    # self.overrideredirect(True)
 
     # FRAMES
     #############################
@@ -50,6 +55,15 @@ class Search( customtkinter.CTk ):
     View_Search.create_form( frame_edit )
     View_Search.create_headers()
     View_Search.create_records()
+
+    # EXIT
+    #######################################
+
+    def on_closing():
+      View_Search.reset()
+      self.destroy()
+
+    self.protocol( "WM_DELETE_WINDOW", on_closing )
 
 
 if __name__ == '__main__':

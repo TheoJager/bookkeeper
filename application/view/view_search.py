@@ -1,10 +1,12 @@
+import tkinter
 from typing import Dict
 from tkinter import END
+
 from customtkinter import CTkFrame, CTkTextbox, CTkComboBox
 
 from application.ui.message import Message
 from application.ui.elements import Elements
-from application.constants import W20, W10
+from application.constants import W20
 from application.functions import format_amount
 from application.database.database_search import Database_Search
 from application.database.database_categories import Database_Categories
@@ -18,6 +20,16 @@ class View_Search:
   FORM_MATCH: CTkTextbox = None
   FORM_CATEGORY: CTkComboBox = None
   FORM_TEXT: CTkTextbox = None
+
+  @staticmethod
+  def reset():
+    View_Search.ELEMENT = None
+    View_Search.ELEMENT_PARENT = None
+
+    View_Search.FORM_NAME = None
+    View_Search.FORM_MATCH = None
+    View_Search.FORM_CATEGORY = None
+    View_Search.FORM_TEXT = None
 
   @staticmethod
   def create_frame_headers( append: CTkFrame ) -> CTkFrame:
@@ -35,17 +47,19 @@ class View_Search:
   @staticmethod
   def create_row( append: CTkFrame, record: Dict, row: int, pady: int ):
     val1, val2, val3, val4, val5 = record
-    Elements.label( append, val1, 0, row, W20, pady ).configure( width = 70 )
-    Elements.label( append, val2, 1, row, W20, pady ).configure( width = 5 )
-    Elements.label( append, val3, 2, row, W20, pady ).configure( width = 50, anchor = "e" )
+    Elements.label( append, val1, 0, row, W20, pady ).configure( width = 70 ) #date
+    Elements.label( append, val2, 1, row, W20, pady ).configure( width = 5 )  #euro
+    Elements.label( append, val3, 2, row, W20, pady ).configure( width = 50, anchor = "e" ) #amount
 
-    label = Elements.label( append, val4, 3, row, W20, pady )
-    label.configure( wraplength = 700 )
+    label = Elements.label( append, val4, 3, row, W20, pady ) #description
+    label.configure( wraplength = 700, width = 750 )
 
-    if type( val5 ) is str:
+    if type( val5 ) is str: #copy
       Elements.label( append, val5, 4, row, W20, pady ).configure( width = 200 )
     else:
-      Elements.button( append, "copy to form", val5, 4, row, W10, pady )
+      button = Elements.button_inverse( append, "copy", val5, 4, row, W20, 0 )
+      button.configure( width = 75 )
+      button.grid( sticky = "sw" )
 
   @staticmethod
   def create_form( append: CTkFrame ):
@@ -54,16 +68,18 @@ class View_Search:
     Elements.label( append, "match", 1, 0 )
     Elements.label( append, "category", 2, 0 )
     Elements.label( append, "text", 3, 0 ).configure( width = 300 )
-    Elements.button( append, "insert", View_Search.insert_record, 4, 0 )
+    Elements.button_inverse( append, "insert", View_Search.insert_record, 4, 0 ).grid( sticky = "sw" )
+
+    categories = [ "== selecteer ==" ] + Database_Categories.categories()
 
     View_Search.FORM_NAME = Elements.text( append, "", 0, 1, W20, 20 )
     View_Search.FORM_MATCH = Elements.text( append, "", 1, 1, W20, 20 )
-    View_Search.FORM_CATEGORY = Elements.select( append, Database_Categories.categories(), 2, 1, W20, 20 )
+    View_Search.FORM_CATEGORY = Elements.select( append, categories, 2, 1, W20, 20 )
     View_Search.FORM_TEXT = Elements.text( append, "", 3, 1, W20, 20 )
 
-    View_Search.FORM_NAME.configure( height = 5 )
-    View_Search.FORM_MATCH.configure( height = 5 )
-    View_Search.FORM_TEXT.configure( height = 75, width = 400 )
+    View_Search.FORM_NAME.configure( height = 5, fg_color = "transparent", border_width = 1 )
+    View_Search.FORM_MATCH.configure( height = 5, fg_color = "transparent", border_width = 1 )
+    View_Search.FORM_TEXT.configure( height = 75, width = 400, fg_color = "transparent", border_width = 1 )
 
     View_Search.FORM_NAME.grid( sticky = "nw" )
     View_Search.FORM_MATCH.grid( sticky = "nw" )
@@ -81,10 +97,13 @@ class View_Search:
 
     if len( name ) == 0:
       Message.ok( "", "Vul een naam in" )
+      return
     elif len( match ) == 0:
       Message.ok( "", "Vul een zoekcriteria in" )
-    elif len( category ) == 0:
+      return
+    elif not ctr:
       Message.ok( "", "kies een categorie" )
+      return
 
     record = {
       "src_name" : name,
@@ -101,12 +120,13 @@ class View_Search:
     View_Search.FORM_NAME.delete( '0.0', END )
     View_Search.FORM_MATCH.delete( '0.0', END )
     View_Search.FORM_TEXT.delete( '0.0', END )
+    View_Search.FORM_CATEGORY.set( "== selecteer ==" )
 
   @staticmethod
   def create_headers():
     View_Search.create_row(
       View_Search.create_frame_headers( View_Search.ELEMENT_PARENT ),
-      [ "date", "", "amount", "description", "add to search" ],
+      [ "date", "", "amount", "description", "copy to search" ],
       0, (20, 10) )
 
   @staticmethod
@@ -141,4 +161,5 @@ class View_Search:
   @staticmethod
   def remove_frame( append: CTkFrame = None ):
     if append is not None:
+      View_Search.ELEMENT = None
       append.destroy()

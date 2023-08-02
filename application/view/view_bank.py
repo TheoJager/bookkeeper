@@ -8,6 +8,10 @@ class View_Bank:
   ELEMENT: CTkLabel = None
 
   @staticmethod
+  def reset():
+    View_Bank.ELEMENT = None
+
+  @staticmethod
   def create( append: CTkFrame, column: int = 0, row: int = 0 ):
     View_Bank.ELEMENT = Elements.header( append, "€ 0.00", column, row )
 

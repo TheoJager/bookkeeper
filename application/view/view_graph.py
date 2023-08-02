@@ -13,6 +13,10 @@ class View_Graph:
   ELEMENTS = { }
 
   @staticmethod
+  def reset():
+    View_Graph.ELEMENTS = { }
+
+  @staticmethod
   def create_header( append: CTkFrame, column: int, name: str ):
     header = Elements.header( append, name, column, 0, (2, 0) )
     header.grid( columnspan = 12 )

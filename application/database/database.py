@@ -20,7 +20,7 @@ class Database:
   @staticmethod
   def query( sql: str, variables: Dict = None ) -> list:
     path = str( Database.root( Path( __file__ ) ).absolute() ).replace( '\\', '/' )
-    db = sqlite3.connect( path + '/bookkeeper.db' )
+    db = sqlite3.connect( path + '/PennyTracker.sqlite' )
     db.row_factory = Database.dict_factory
 
     cursor = db.cursor()

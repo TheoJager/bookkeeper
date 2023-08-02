@@ -8,7 +8,11 @@ from customtkinter import CTkFrame, CTkLabel
 
 
 class Navigation:
-  ELEMENT: CTkLabel
+  ELEMENT: CTkLabel = None
+
+  @staticmethod
+  def reset():
+    Navigation.ELEMENT = None
 
   @staticmethod
   def next():

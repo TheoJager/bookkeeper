@@ -13,6 +13,10 @@ class View_Month:
   ELEMENTS = { }
 
   @staticmethod
+  def reset():
+    View_Month.ELEMENTS = { }
+
+  @staticmethod
   def create( append: CTkFrame ):
     row = 0
     for category in Database_Categories.select():

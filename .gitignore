@@ -30,5 +30,6 @@ rsa.private
 .idea/
 images/
 __pycache__/
-bookkeeper.db
+PennyTracker.sqlite
 identifier.sqlite
+

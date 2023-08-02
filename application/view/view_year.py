@@ -11,6 +11,10 @@ class View_Year:
   ELEMENTS = { }
 
   @staticmethod
+  def reset():
+    View_Year.ELEMENTS = { }
+
+  @staticmethod
   def create( append: CTkFrame ):
     row = 0
     for category in Database_Categories.select():

@@ -9,6 +9,10 @@ class View_Date:
   ELEMENT: CTkLabel = None
 
   @staticmethod
+  def reset():
+    View_Date.ELEMENT = None
+
+  @staticmethod
   def create( append: CTkFrame, column: int = 0, row: int = 0 ):
     View_Date.ELEMENT = Elements.header( append, "januari 1970", column, row )
 
