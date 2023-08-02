@@ -69,6 +69,26 @@ class Database_Search:
     Database.query( sql, record )
 
   @staticmethod
+  def count_unsearched() -> int:
+    sql = """
+      SELECT 
+        count( * ) as count
+      FROM 
+        mutations
+      WHERE ctr_id >= 0
+        AND mts_id NOT IN (
+        SELECT 
+          mts_id
+        FROM 
+          mutations LEFT JOIN search
+        WHERE 
+          mts_text LIKE '%' || src_match || '%'
+        )
+    """
+    rec = Database.query( sql )
+    return int( rec[ 0 ][ 'count' ] )
+
+  @staticmethod
   def select_unsearched():
     sql = """
       SELECT 
@@ -87,7 +107,9 @@ class Database_Search:
         WHERE 
           mts_text LIKE '%' || src_match || '%'
         )
-      LIMIT 10
+      ORDER BY
+        mts_text
+      LIMIT 20
     """
     return Database.query( sql )
 

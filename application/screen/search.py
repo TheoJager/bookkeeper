@@ -19,7 +19,7 @@ class Search( customtkinter.CTk ):
     # https://stackoverflow.com/questions/26168967/invalid-command-name-while-executing-after-script
     #######################################
 
-    self.title( "Searches" )
+    self.title( "Search" )
 
     w = 1200
     h = 700
