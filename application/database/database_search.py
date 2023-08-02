@@ -122,12 +122,13 @@ class Database_Search:
         mts_amount, 
         mts_text,
         src_name,
+        src_match,
         search.ctr_id
       FROM 
         mutations LEFT JOIN search
       WHERE 
         mts_text LIKE '%' || src_match || '%'
-      GROUP BY 
-        mts_id
+      ORDER BY
+        src_match, src_name
     """
     return Database.query( sql )

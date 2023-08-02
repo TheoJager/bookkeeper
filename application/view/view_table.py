@@ -23,24 +23,24 @@ class View_Table:
   @staticmethod
   def create_frame_headers( append: CTkFrame ) -> CTkFrame:
     frame = Elements.frame( append, 0, 1 )
-    frame.configure( width = 400, fg_color = "transparent" )
+    frame.configure( width = 550, fg_color = "transparent" )
     return frame
 
   @staticmethod
   def create_frame_rows( append: CTkFrame ) -> CTkFrame:
     frame = Elements.scroll( append, 0, 2 )
-    frame.configure( width = 400, fg_color = "transparent", height = 290 )
+    frame.configure( width = 550, fg_color = "transparent", height = 290 )
     View_Table.ELEMENT = frame
     return frame
 
   @staticmethod
   def create_row( append: CTkFrame, record: Dict, row: int, pady: int ):
     val1, val2, val3, val4, val5 = record
-    Elements.label( append, val1, 0, row, W20, pady ).configure( width = 70 )
-    Elements.label( append, val2, 1, row, W10, pady ).configure( width = 115 )
-    Elements.label( append, val3, 2, row, W10, pady ).configure( width = 90 )
+    Elements.label( append, val1, 0, row, W20, pady ).configure( width = 70 )  # date
+    Elements.label( append, val2, 1, row, W10, pady ).configure( width = 250 ) # product
+    Elements.label( append, val3, 2, row, W10, pady ).configure( width = 90 )  # category
     Elements.label( append, val4, 3, row, W10, pady ).configure( width = 5 )
-    Elements.label( append, val5, 4, row, W10, pady ).configure( width = 40, anchor = "e" )
+    Elements.label( append, val5, 4, row, W10, pady ).configure( width = 40, anchor = "e" ) # amount
 
   @staticmethod
   def create_headers():
@@ -57,7 +57,7 @@ class View_Table:
     for record in records:
       data = [
         record[ "mts_date" ],
-        "src_name",
+        record[ "src_name" ],
         record[ "ctr_name" ],
         "€",
         format_amount( record[ "mts_amount" ] )

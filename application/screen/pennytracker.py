@@ -50,9 +50,9 @@ class PennyTracker( customtkinter.CTk ):
     #######################################
 
     self.grid_columnconfigure( 0, weight = 1, minsize = 200 )  # sidebar
-    self.grid_columnconfigure( 1, weight = 1, minsize = 500 )  # amount year
-    self.grid_columnconfigure( 2, weight = 1, minsize = 350 )  # amount month
-    self.grid_columnconfigure( 3, weight = 1, minsize = 450 )  # table
+    self.grid_columnconfigure( 1, weight = 1, minsize = 425 )  # amount year
+    self.grid_columnconfigure( 2, weight = 1, minsize = 275 )  # amount month
+    self.grid_columnconfigure( 3, weight = 1, minsize = 600 )  # table
     self.grid_rowconfigure( (0, 1), weight = 1 )
 
     # FRAMES

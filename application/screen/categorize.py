@@ -52,7 +52,7 @@ class Categorize( customtkinter.CTk ):
     # records
     #############################
 
-    View_Mutations.create_records( frame_records )
+    # View_Mutations.create_records( frame_records )
 
 
 if __name__ == '__main__':

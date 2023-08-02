@@ -28,21 +28,21 @@ class View_Mutations:
       [ "date", "product", "category", "", "amount", "description" ],
       0, (20, 10) )
 
-  @staticmethod
-  def create_records( append: CTkFrame ):
-    row = 0
-    for record in Database_Mutations.select_uncategorized_year():
-      data = [
-        record[ "mts_date" ],
-        "src_name",
-        [ "in", "et", "bd", "ab", "ks", "sp", "sa" ],
-        "€",
-        format_amount( record[ "mts_amount" ] ),
-        record[ "mts_text" ]
-      ]
-
-      View_Mutations.create_row( append, data, row, 3, View_Mutations.set_category )
-      row += 1
+  # @staticmethod
+  # def create_records( append: CTkFrame ):
+  #   row = 0
+  #   for record in Database_Mutations.select_uncategorized_year():
+  #     data = [
+  #       record[ "mts_date" ],
+  #       record[ "src_name" ],
+  #       [ "in", "et", "bd", "ab", "ks", "sp", "sa" ],
+  #       "€",
+  #       format_amount( record[ "mts_amount" ] ),
+  #       record[ "mts_text" ]
+  #     ]
+  #
+  #     View_Mutations.create_row( append, data, row, 3, View_Mutations.set_category )
+  #     row += 1
 
   @staticmethod
   def set_category( value: str ):
