@@ -26,6 +26,7 @@ locale.setlocale( locale.LC_TIME, "nl_NL" )
 
 glb.SELECTED_MONTH = Today.month()
 
+
 class PennyTracker( customtkinter.CTk ):
   def __init__( self ):
     super().__init__()

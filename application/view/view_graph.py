@@ -1,6 +1,9 @@
 import math
+import matplotlib.pyplot as plt
 
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from customtkinter import CTkFrame, CTkProgressBar
+from application.constants import COLOR_CONTRAST, COLOR_CURRENT_BAR, COLOR_BACKGROUND, COLOR_BACKGROUND_BAR
 from application.ui.elements import Elements
 from application.view.view_date import View_Date
 from application.view.view_month import View_Month
@@ -20,12 +23,6 @@ class View_Graph:
   def create_header( append: CTkFrame, column: int, name: str ):
     header = Elements.header( append, name, column, 0, (2, 0) )
     header.grid( columnspan = 12 )
-
-  @staticmethod
-  def create_bars( append: CTkFrame, column: int, i: int ):
-    progressbar = Elements.progressbar( append, column, 1, (1, 0), 20 )
-    progressbar.set( i / 12 )
-    return progressbar
 
   @staticmethod
   def register_bar( bar: CTkProgressBar, name: str, i: int ):
@@ -54,7 +51,7 @@ class View_Graph:
 
       column += 1
       for i in range( 12 ):
-        bar = View_Graph.register_bar( View_Graph.create_bars( append, column, i ), category[ "ctr_name" ], i )
+        bar = View_Graph.register_bar( Elements.progressbar( append, column, 1, (1, 0), 20 ), category[ "ctr_name" ], i )
         bar.set( abs( amounts[ i ] ) / maximum )
 
         button = Elements.button( append, " ", lambda i = i: View_Graph.update_screen( i + 1 ), column, 2, 0, 0 )
@@ -77,9 +74,9 @@ class View_Graph:
       bars = View_Graph.ELEMENTS[ category[ "ctr_name" ] ]
       for i in bars:
         if i + 1 == month:
-          bars[ i ].configure( progress_color = "#A2972F" )
+          bars[ i ].configure( progress_color = COLOR_CURRENT_BAR )
         else:
-          bars[ i ].configure( progress_color = "#2FA572" )
+          bars[ i ].configure( progress_color = COLOR_CONTRAST )
 
   @staticmethod
   def calculate_upper_limit( amounts ):
@@ -90,3 +87,22 @@ class View_Graph:
     minimum += 1
 
     return minimum * pow( 10, length )
+
+  @staticmethod
+  def draw_graph( append: CTkFrame ):
+    x = range( 12 )
+    negative_data = [ -1, -4, -3, -2, -6, -2, -8, -1, -4, -3, -2, -6 ]
+    positive_data = [ 4, 2, 3, 1, 4, 6, 7, 3, 1, 4, 6, 7 ]
+
+    plt.axis( 'off' )
+
+    fig = plt.figure( figsize = (1.5, 2), facecolor = COLOR_BACKGROUND )
+    fig.subplots_adjust( left = 0, bottom = 0, right = 0.97, top = 0.97, wspace = 0, hspace = 0 )
+
+    ax = plt.subplot( 111 )
+    ax.bar( x, negative_data, width = 0.8, color = COLOR_BACKGROUND_BAR )
+    ax.bar( x, positive_data, width = 0.8, color = COLOR_CONTRAST )
+
+    canvas = FigureCanvasTkAgg( fig, master = append )
+    canvas.get_tk_widget().grid( row = 10, column = 0, ipadx = 0, ipady = 0, sticky = "nw" )
+    canvas.draw()
