@@ -1,4 +1,3 @@
-import tkinter
 from typing import Dict
 from tkinter import END
 

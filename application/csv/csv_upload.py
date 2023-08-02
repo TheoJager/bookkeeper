@@ -1,9 +1,12 @@
 import re
 import csv
 import sqlite3
+import application.globals as glb
 
 from random import randrange
 from tkinter import filedialog
+
+from application.view.view import View
 from application.ui.message import Message
 from application.database.database_mutations import Database_Mutations
 
@@ -59,6 +62,9 @@ def csv_to_database():
         Database_Mutations.insert( record )
       except sqlite3.IntegrityError:
         continue
+
+    View.initiate()
+    View.update( glb.SELECTED_MONTH )
     Message.ok( 'result', 'import successful' )
 
 

@@ -3,9 +3,8 @@ from application.database.database_search import Database_Search
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 
-# NAMES
+# NAME
 #######################################
-# ProfitPal
 # PennyTracker
 
 # PACKAGES
