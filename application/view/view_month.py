@@ -18,9 +18,15 @@ class View_Month:
 
   @staticmethod
   def create( append: CTkFrame ):
+    View_Month.create_categories( append )
+    View_Month.create_total( append )
+
+  @staticmethod
+  def create_categories( append: CTkFrame ):
     row = 0
     for category in Database_Categories.select():
       ctr_id = category[ "ctr_id" ]
+      ctr_name = category[ "ctr_name" ]
 
       Elements.label( append, "€", 1, row, W20, W20 )
       s = Elements.label( append, "0.00", 2, row, W10, W20 )
@@ -31,11 +37,33 @@ class View_Month:
       s.configure( anchor = "e", width = 60 )
       p.configure( anchor = "e", width = 60 )
 
-      View_Month.ELEMENTS[ category[ "ctr_name" ] ] = [ s, p ]
+      View_Month.ELEMENTS[ ctr_name ] = [ s, p ]
       row += 1
 
   @staticmethod
+  def create_total( append: CTkFrame ):
+    row = 8
+
+    ctr_name = "totaal"
+
+    Elements.label( append, "€", 1, row, W20, W20 )
+    s = Elements.label( append, "0.00", 2, row, W10, W20 )
+    p = Elements.label( append, "0.00", 3, row, W10, W20 )
+    Elements.label( append, "", 4, row, (10, 10), W20 )
+    Elements.button( append, "@", lambda: View_Table.update( glb.SELECTED_MONTH ), 5, row, (20, 20) ).configure( width = 25 )
+
+    s.configure( anchor = "e", width = 60 )
+    p.configure( anchor = "e", width = 60 )
+
+    View_Month.ELEMENTS[ ctr_name ] = [ s, p ]
+
+  @staticmethod
   def update( month: int ):
+    View_Month.update_categories( month )
+    View_Month.update_total( month )
+
+  @staticmethod
+  def update_categories( month: int ):
     income = Database_Mutations.sum_category_month( CATEGORY_INCOME, month )
 
     for category in Database_Categories.select():
@@ -45,6 +73,14 @@ class View_Month:
       s, p = View_Month.ELEMENTS[ category[ "ctr_name" ] ]
       s.configure( text = format_amount( current ) )
       p.configure( text = format_percentage( percent ) )
+
+  @staticmethod
+  def update_total( month: int ):
+    current = Database_Mutations.sum_month( month )
+
+    s, p = View_Month.ELEMENTS[ "totaal" ]
+    s.configure( text = format_amount( current ) )
+    p.configure( text = "" )
 
   @staticmethod
   def calculate_percentage( amount: float, income: float ) -> float:
