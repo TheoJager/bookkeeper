@@ -98,6 +98,20 @@ class Database_Mutations:
     return Database.query( Database_Mutations.SELECT_DATE, record )
 
   @staticmethod
+  def sum_month( month: int ) -> list:
+    year = Today.year() - (1 if month > Today.month() else 0)
+
+    record = {
+      "mts_date_start": date( year, month ),
+      "mts_date_end"  : date( year, month + 1 )
+    }
+
+    mts = Database.query( Database_Mutations.SUM_DATE, record )
+
+    mts_total = mts[ 0 ][ "mts_total" ]
+    return 0 if mts_total is None else round( mts_total, 2 )
+
+  @staticmethod
   def sum() -> float:
     sql = "SELECT sum(mts_amount) AS mts_total FROM mutations"
 
@@ -105,32 +119,6 @@ class Database_Mutations:
 
     mts_total = mts[ 0 ][ "mts_total" ]
     return 0 if mts_total is None else round( mts_total, 2 )
-
-  # @staticmethod
-  # def select_uncategorized_year() -> list:
-  #   year = Today.year()
-  #   month = Today.month()
-  #
-  #   sql = """
-  #     SELECT
-  #       ctr_name,
-  #       mutations.*
-  #     FROM
-  #       mutations
-  #       LEFT JOIN categories USING(ctr_id)
-  #     WHERE ctr_id    = :ctr_id
-  #       AND mts_date >= :mts_date_start
-  #       AND mts_date <  :mts_date_end
-  #     ORDER BY
-  #       mts_text
-  #   """
-  #
-  #   record = {
-  #     "ctr_id"        : 0,
-  #     "mts_date_start": date( year - 1, month + 1 ),
-  #     "mts_date_end"  : date( year - 0, month + 1 )
-  #   }
-  #   return Database.query( sql, record )
 
   @staticmethod
   def select_category_year( ctr_id: int ) -> list:
@@ -185,6 +173,13 @@ class Database_Mutations:
     return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
+  def sum_months() -> list:
+    response = [ ]
+    for i in range( 12 ):
+      response.append( Database_Mutations.sum_month( i + 1 ) )
+    return response
+
+  @staticmethod
   def sum_category_months( ctr_id: int ) -> list:
     multiplier = 1 if ctr_id == CATEGORY_INCOME else -1
     response = [ ]
@@ -192,7 +187,7 @@ class Database_Mutations:
       response.append( Database_Mutations.sum_category_month( ctr_id, i + 1 ) * multiplier )
     return response
 
-  SUM_CATEGORY_DATE = """
+  SUM_DATE = """
     SELECT 
       sum(mts_amount) as mts_total
     FROM 
@@ -201,7 +196,6 @@ class Database_Mutations:
         search
         LEFT JOIN categories USING(ctr_id) )
     WHERE mts_text LIKE '%' || src_match || '%'
-      AND search.ctr_id = :ctr_id 
       AND mts_date >= :mts_date_start 
       AND mts_date <  :mts_date_end
   """
@@ -221,6 +215,20 @@ class Database_Mutations:
       AND mts_date <  :mts_date_end
     ORDER BY
       ctr_name, src_name
+  """
+
+  SUM_CATEGORY_DATE = """
+    SELECT 
+      sum(mts_amount) as mts_total
+    FROM 
+      mutations 
+      LEFT JOIN ( 
+        search
+        LEFT JOIN categories USING(ctr_id) )
+    WHERE mts_text LIKE '%' || src_match || '%'
+      AND search.ctr_id = :ctr_id 
+      AND mts_date >= :mts_date_start 
+      AND mts_date <  :mts_date_end
   """
 
   SELECT_CATEGORY_DATE = """
