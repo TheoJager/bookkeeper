@@ -1,8 +1,8 @@
 import math
 import matplotlib.pyplot as plt
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from customtkinter import CTkFrame, CTkProgressBar
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from application.constants import COLOR_CONTRAST, COLOR_CURRENT_BAR, COLOR_BACKGROUND, COLOR_BACKGROUND_BAR
 from application.ui.elements import Elements
 from application.view.view_date import View_Date
@@ -36,25 +36,36 @@ class View_Graph:
     spacer.grid( rowspan = 2 )
 
   @staticmethod
+  def create_frame( append: CTkFrame, column:int, row:int, height:int ) -> CTkFrame:
+    frame = Elements.frame( append, column, row )
+    frame.configure( width = 300, height = height, fg_color = "transparent" )
+    return frame
+
+  @staticmethod
   def create( append: CTkFrame ):
     column = 0
 
     View_Graph.create_spacer( append, column )
 
-    column += 1
-
     for category in Database_Categories.select():
       View_Graph.create_header( append, column, category[ "ctr_name" ] )
 
       amounts = Database_Mutations.sum_category_months( category[ "ctr_id" ] )
-      maximum = View_Graph.calculate_upper_limit( amounts )
+      # maximum = View_Graph.calculate_upper_limit( amounts )
 
-      column += 1
+      data_positive = [0] * 12
+      data_negative = [0] * 12
+
       for i in range( 12 ):
-        bar = View_Graph.register_bar( Elements.progressbar( append, column, 1, (1, 0), 20 ), category[ "ctr_name" ], i )
-        bar.set( abs( amounts[ i ] ) / maximum )
+        if amounts[i] >= 0:
+          data_positive[i] = amounts[i]
+        else:
+          data_negative[i] = amounts[i]
 
-        button = Elements.button( append, " ", lambda i = i: View_Graph.update_screen( i + 1 ), column, 2, 0, 0 )
+      View_Graph.draw_graph(append, column, 2, data_positive, data_negative )
+
+      for i in range( 12 ):
+        button = Elements.button( append, " ", lambda i = i: View_Graph.update_screen( i + 1 ), column, 1, 0, 0 )
         button.configure( width = 1, height = 1, corner_radius = 0 )
         column += 1
 
@@ -63,7 +74,7 @@ class View_Graph:
 
   @staticmethod
   def update_screen( month: int ):
-    View_Graph.update( month )
+    # View_Graph.update( month )
     View_Date.update( month )
     View_Month.update( month )
     View_Table.update( month )
@@ -79,30 +90,24 @@ class View_Graph:
           bars[ i ].configure( progress_color = COLOR_CONTRAST )
 
   @staticmethod
-  def calculate_upper_limit( amounts ):
-    maximum = round( max( amounts ) )
-    length = len( str( maximum ) ) - 1
-
-    minimum = math.floor( maximum / pow( 10, length ) )
-    minimum += 1
-
-    return minimum * pow( 10, length )
-
-  @staticmethod
-  def draw_graph( append: CTkFrame ):
-    x = range( 12 )
-    negative_data = [ -1, -4, -3, -2, -6, -2, -8, -1, -4, -3, -2, -6 ]
-    positive_data = [ 4, 2, 3, 1, 4, 6, 7, 3, 1, 4, 6, 7 ]
-
+  def draw_graph( append: CTkFrame, column: int, row: int, data_positive: list, data_negative: list ):
     plt.axis( 'off' )
+
+    maximum = round( max( data_positive ) )
+    minimum = round( max( data_negative ) )
+    size = max(abs(maximum), abs(minimum))
 
     fig = plt.figure( figsize = (1.5, 2), facecolor = COLOR_BACKGROUND )
     fig.subplots_adjust( left = 0, bottom = 0, right = 0.97, top = 0.97, wspace = 0, hspace = 0 )
 
+    x = range( 12 )
     ax = plt.subplot( 111 )
-    ax.bar( x, negative_data, width = 0.8, color = COLOR_BACKGROUND_BAR )
-    ax.bar( x, positive_data, width = 0.8, color = COLOR_CONTRAST )
+    ax.bar( x, data_negative, width = 0.8, color = COLOR_BACKGROUND_BAR )
+    ax.bar( x, data_positive, width = 0.8, color = COLOR_CONTRAST )
+
+    ax.bar( 13, +size, width = 0.8, color = COLOR_BACKGROUND )
+    ax.bar( 13, -size, width = 0.8, color = COLOR_BACKGROUND )
 
     canvas = FigureCanvasTkAgg( fig, master = append )
-    canvas.get_tk_widget().grid( row = 10, column = 0, ipadx = 0, ipady = 0, sticky = "nw" )
+    canvas.get_tk_widget().grid( row = row, column = column, ipadx = 0, ipady = 0, sticky = "nw", columnspan=12 )
     canvas.draw()
