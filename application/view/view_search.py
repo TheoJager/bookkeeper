@@ -135,7 +135,7 @@ class View_Search:
 
     record = View_Search.validate_record( {
       "src_name" : name.upper(),
-      "src_match": match,
+      "src_match": match.upper(),
       "src_text" : text,
       "ctr_id"   : ctr_id,
     } )

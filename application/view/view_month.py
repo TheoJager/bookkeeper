@@ -1,8 +1,11 @@
 import application.globals as glb
 
 from customtkinter import CTkFrame
+
+from application.date.date import date
+from application.date.today import Today
 from application.ui.elements import Elements
-from application.constants import W20, W10, CATEGORY_INCOME
+from application.constants import W20, W10, CATEGORY_INCOME, COLOR_CONTRAST, CATEGORY_SPAREN
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 from application.functions import format_amount, format_percentage
@@ -48,14 +51,41 @@ class View_Month:
 
     Elements.label( append, "€", 1, row, W20, W20 )
     s = Elements.label( append, "0.00", 2, row, W10, W20 )
-    p = Elements.label( append, "0.00", 3, row, W10, W20 )
+    Elements.button( append, "transfer", lambda: View_Month.transfer( glb.SELECTED_MONTH ), 3, row, (20, 20) ).configure( width = 25, fg_color = COLOR_CONTRAST )
     Elements.label( append, "", 4, row, (10, 10), W20 )
     Elements.button( append, "@", lambda: View_Table.update( glb.SELECTED_MONTH ), 5, row, (20, 20) ).configure( width = 25 )
 
     s.configure( anchor = "e", width = 60 )
-    p.configure( anchor = "e", width = 60 )
 
-    View_Month.ELEMENTS[ ctr_name ] = [ s, p ]
+    View_Month.ELEMENTS[ ctr_name ] = s
+
+  @staticmethod
+  def transfer( month: int ):
+    year = Today.year() - (1 if month > Today.month() else 0)
+    sum_month = Database_Mutations.sum_month( month )
+
+    if sum_month != 0:
+      date_end = date( year, month + 1, -1 )
+      date_srt = date( year, month + 1, 1 )
+
+      Database_Mutations.insert( {
+        'mts_date'  : date_end,
+        'mts_amount': sum_month * -1,
+        'mts_start' : 0,
+        'mts_text'  : 'NL51ABNA0518940136: afboeking maand',
+        'ctr_id'    : CATEGORY_SPAREN,
+      } )
+
+      Database_Mutations.insert( {
+        'mts_date'  : date_srt,
+        'mts_amount': sum_month,
+        'mts_start' : 0,
+        'mts_text'  : 'NL51ABNA0518940136: bijboeking maand',
+        'ctr_id'    : CATEGORY_SPAREN,
+      } )
+
+      View_Month.update( month )
+      View_Table.update( month )
 
   @staticmethod
   def update( month: int ):
@@ -77,10 +107,10 @@ class View_Month:
   @staticmethod
   def update_total( month: int ):
     current = Database_Mutations.sum_month( month )
+    current = 0 if current == -0 else current
 
-    s, p = View_Month.ELEMENTS[ "totaal" ]
+    s = View_Month.ELEMENTS[ "totaal" ]
     s.configure( text = format_amount( current ) )
-    p.configure( text = "" )
 
   @staticmethod
   def calculate_percentage( amount: float, income: float ) -> float:

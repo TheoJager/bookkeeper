@@ -3,6 +3,7 @@
 W20 = (20, 0)
 W10 = (10, 0)
 
+CATEGORY_SPAREN: int = 6
 CATEGORY_INCOME: int = 7
 
 COLOR_BACKGROUND_1: str = "#2B2B2B"

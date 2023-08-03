@@ -16,6 +16,11 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual( "20080301", date( 2008, 2, 30 ) )
         self.assertEqual( "20000301", date( 2000, 2, 30 ) )
         self.assertEqual( "19000302", date( 1900, 2, 30 ) )
+        self.assertEqual( "20080201", date( 2008, 2, 0 ) )
+        self.assertEqual( "20080131", date( 2008, 2, -1 ) )
+        self.assertEqual( "20080101", date( 2008, 2, -31 ) )
+        self.assertEqual( "20071231", date( 2008, 2, -32 ) )
+        self.assertEqual( "20081231", date( 2008, 12 + 1, -1 ) )
 
 if __name__ == '__main__':
     unittest.main()

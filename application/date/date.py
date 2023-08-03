@@ -27,6 +27,10 @@ def _rollover_months( year: int, month: int ) -> list:
     month -= 12
     year += 1
 
+  while month < 1:
+    month += 12
+    year -= 1
+
   return [ year, month ]
 
 
@@ -37,6 +41,17 @@ def _rollover_days( year: int, month: int, day: int ) -> list:
       days_in_month = get_days_in_month( year, month )
       day -= days_in_month
       month += 1
+  elif day == 0:
+    day = 1
+  elif day < 0:
+    while day < 0:
+      month -= 1
+      year, month = _rollover_months( year, month )
+      days_in_month = get_days_in_month( year, month )
+      day += days_in_month + 1
+      if day == 0:
+        year, month = _rollover_months( year, month - 1 )
+        day = get_days_in_month( year, month )
 
   year, month = _rollover_months( year, month )
 
