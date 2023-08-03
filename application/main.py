@@ -9,6 +9,7 @@ from application.database.database_categories import Database_Categories
 
 # PACKAGES
 #######################################
+# matplotlib
 # pyinstaller
 # customtkinter
 
