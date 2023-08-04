@@ -15,7 +15,7 @@ class View:
 
   @staticmethod
   def update( month: int ):
-    # View_Graph.update( month )
+    View_Graph.update( month )
     View_Date.update( month )
     View_Month.update( month )
     View_Table.update( month )

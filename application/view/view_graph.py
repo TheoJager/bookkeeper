@@ -1,10 +1,9 @@
-from typing import Dict
-
 import matplotlib.pyplot as plt
 
+from typing import Dict
 from customtkinter import CTkFrame
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from application.constants import COLOR_1, COLOR_BACKGROUND_1, COLOR_BACKGROUND_2, W10, COLOR_CONTRAST, COLOR_2
+from application.constants import COLOR_1, COLOR_BACKGROUND_1, COLOR_BACKGROUND_2, W10, COLOR_CONTRAST, COLOR_CURRENT
 from application.date.today import Today
 from application.ui.elements import Elements
 from application.view.view_date import View_Date
@@ -85,8 +84,8 @@ class View_Graph:
 
     plt.axis( 'off' )
 
-    maximum = round( max( data[ "p" ] ) )
-    minimum = round( max( data[ "n" ] ) )
+    maximum = round( max( data[ "p" ] ) ) + 1
+    minimum = round( min( data[ "n" ] ) ) - 1
     size = max( abs( maximum ), abs( minimum ) )
 
     fig = plt.figure( figsize = demension, facecolor = COLOR_BACKGROUND_1 )
@@ -109,31 +108,44 @@ class View_Graph:
     append = View_Graph.create_frame( append, column, row )
     append.grid( padx = (13, 0) )
 
+    View_Graph.ELEMENTS[ ctr_id ] = { }
+
     today_month = Today.month()
     for i in range( 12 ):
       button = Elements.button( append, " ", lambda i = i: View_Graph.update_screen( i + 1, ctr_id ), i, 0, 0, 0 )
       button.configure( width = 1, height = 1, corner_radius = 0 )
-      if i in (3, 4, 5):
-        button.configure( fg_color = COLOR_2 )
-      elif i in (9, 10, 11):
-        button.configure( fg_color = COLOR_2 )
+
+      View_Graph.ELEMENTS[ ctr_id ][ i ] = button
 
       if i + 1 == today_month:
         button.configure( fg_color = COLOR_CONTRAST )
+
+  @staticmethod
+  def update( month: int ):
+    today_month = Today.month()
+    for ctr_id in View_Graph.ELEMENTS:
+      for i in View_Graph.ELEMENTS[ ctr_id ]:
+        button = View_Graph.ELEMENTS[ ctr_id ][ i ]
+        if i + 1 == today_month:
+          button.configure( fg_color = COLOR_CONTRAST )
+        elif i + 1 == month:
+          button.configure( fg_color = COLOR_CURRENT )
+        else:
+          button.configure( fg_color = COLOR_1 )
 
   @staticmethod
   def create_buttons_total( append: CTkFrame, column: int, row: int ):
     append = View_Graph.create_frame( append, column, row )
     append.grid( padx = (13, 0) )
 
+    View_Graph.ELEMENTS[ 0 ] = { }
+
     today_month = Today.month()
     for i in range( 12 ):
       button = Elements.button( append, " ", lambda i = i: View_Graph.update_screen_total( i + 1 ), i, 0, 0, 0 )
       button.configure( width = 1, height = 1, corner_radius = 0 )
-      if i in (3, 4, 5):
-        button.configure( fg_color = COLOR_2 )
-      elif i in (9, 10, 11):
-        button.configure( fg_color = COLOR_2 )
+
+      View_Graph.ELEMENTS[ 0 ][ i ] = button
 
       if i + 1 == today_month:
         button.configure( fg_color = COLOR_CONTRAST )
