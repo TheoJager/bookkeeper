@@ -6,7 +6,7 @@ from application.constants import W20
 from application.date.today import Today
 from application.ui.elements import Elements
 from application.screen.search import Search
-from application.csv.csv_upload import csv_to_database
+from application.csv.csvfile import CSVFile
 from application.view.view import View
 from application.view.view_bank import View_Bank
 from application.view.view_date import View_Date
@@ -74,7 +74,7 @@ class PennyTracker( customtkinter.CTk ):
 
     Elements.title( frame_sidebar, "PennyTracker", 0, 0, (10, 0), W20 )
 
-    Elements.button( frame_sidebar, "Upload CSV", csv_to_database, 0, 1, 20 )
+    Elements.button( frame_sidebar, "Upload CSV", CSVFile.to_database, 0, 1, 20 )
 
     View_Date.create( frame_sidebar, 0, 3 )
 
