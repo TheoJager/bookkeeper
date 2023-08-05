@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 from typing import Dict
-from customtkinter import CTkFrame
+from customtkinter import CTkFrame, CTkFont
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from application.constants import COLOR_1, COLOR_BACKGROUND_1, COLOR_BACKGROUND_2, W10, COLOR_CONTRAST, COLOR_CURRENT
 from application.date.today import Today
@@ -27,10 +27,11 @@ class View_Graph:
     View_Table.update_category_month( ctr_id, month )
 
   @staticmethod
-  def update_screen_total( month: int ):
+  def update_screen_total( month: int, ctr_id: int ):
     View_Date.update( month )
     View_Month.update( month )
     View_Table.update( month )
+    return ctr_id
 
   @staticmethod
   def create( append: CTkFrame ):
@@ -49,20 +50,20 @@ class View_Graph:
     View_Graph.create_bars( append, 100, 100, { "p": [ 0 ] * 12, "n": [ 0 ] * 12 }, (0, 0) )
 
   @staticmethod
-  def create_graph( append: CTkFrame, ctr: Dict, data: Dict, column: int ):
-    View_Graph.create_header( append, ctr[ "ctr_name" ], column, 0 )
-
-    View_Graph.create_bars( append, column, 1, data )
-
-    View_Graph.create_buttons( append, ctr[ "ctr_id" ], column, 2 )
-
-  @staticmethod
   def create_graph_total( append: CTkFrame, ctr_name: str, data: Dict, column: int ):
     View_Graph.create_header( append, ctr_name, column, 0 )
 
     View_Graph.create_bars( append, column, 1, data )
 
-    View_Graph.create_buttons_total( append, column, 2 )
+    View_Graph.create_buttons( append, 0, column, 2, View_Graph.update_screen_total )
+
+  @staticmethod
+  def create_graph( append: CTkFrame, ctr: Dict, data: Dict, column: int ):
+    View_Graph.create_header( append, ctr[ "ctr_name" ], column, 0 )
+
+    View_Graph.create_bars( append, column, 1, data )
+
+    View_Graph.create_buttons( append, ctr[ "ctr_id" ], column, 2, View_Graph.update_screen )
 
   @staticmethod
   def create_frame( append: CTkFrame, column: int, row: int ) -> CTkFrame:
@@ -91,10 +92,15 @@ class View_Graph:
     fig = plt.figure( figsize = demension, facecolor = COLOR_BACKGROUND_1 )
     fig.subplots_adjust( left = 0, bottom = 0, right = 0.97, top = 0.97, wspace = 0, hspace = 0 )
 
+    today_month = Today.month()
+
+    p = data[ "p" ][ today_month: ] + data[ "p" ][ :today_month ]
+    n = data[ "n" ][ today_month: ] + data[ "n" ][ :today_month ]
+
     x = range( 12 )
     ax = plt.subplot( 111 )
-    ax.bar( x, data[ "p" ], width = 0.8, color = COLOR_1 )
-    ax.bar( x, data[ "n" ], width = 0.8, color = COLOR_BACKGROUND_2 )
+    ax.bar( x, p, width = 0.8, color = COLOR_1 )
+    ax.bar( x, n, width = 0.8, color = COLOR_BACKGROUND_2 )
 
     ax.bar( 13, +size, width = 0.8, color = COLOR_BACKGROUND_1 )
     ax.bar( 13, -size, width = 0.8, color = COLOR_BACKGROUND_1 )
@@ -104,21 +110,38 @@ class View_Graph:
     canvas.draw()
 
   @staticmethod
-  def create_buttons( append: CTkFrame, ctr_id: int, column: int, row: int ):
+  def create_buttons( append: CTkFrame, ctr_id: int, column: int, row: int, command: callable ):
     append = View_Graph.create_frame( append, column, row )
     append.grid( padx = (13, 0) )
 
     View_Graph.ELEMENTS[ ctr_id ] = { }
 
     today_month = Today.month()
-    for i in range( 12 ):
-      button = Elements.button( append, " ", lambda i = i: View_Graph.update_screen( i + 1, ctr_id ), i, 0, 0, 0 )
-      button.configure( width = 1, height = 1, corner_radius = 0 )
+    m = [ "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D" ]
+    a = list( range( today_month, 12 ) ) + list( range( today_month ) )
 
-      View_Graph.ELEMENTS[ ctr_id ][ i ] = button
+    column = 0
+    for i in a:  # range( 12 ):
+      View_Graph.ELEMENTS[ ctr_id ][ i ] = View_Graph.create_buttons_button(
+        append, column, lambda i = i: command( i + 1, ctr_id )
+      )
+      View_Graph.create_buttons_label(
+        append, column, m[ i ]
+      )
+      column += 1
 
-      if i + 1 == today_month:
-        button.configure( fg_color = COLOR_CONTRAST )
+  @staticmethod
+  def create_buttons_button( append: CTkFrame, column: int, command: callable ):
+    button = Elements.button( append, " ", command, column, 0, 0, 0 )
+    button.configure( width = 1, height = 1, corner_radius = 0 )
+    return button
+
+  @staticmethod
+  def create_buttons_label( append: CTkFrame, column: int, value: str ):
+    label = Elements.label( append, value, column, 1, 0, 0 )
+    label.configure( width = 2, height = 1, corner_radius = 0, font = CTkFont( size = 8 ) )
+    label.grid( padx = (1, 0) )
+    return label
 
   @staticmethod
   def update( month: int ):
@@ -132,23 +155,6 @@ class View_Graph:
           button.configure( fg_color = COLOR_CURRENT )
         else:
           button.configure( fg_color = COLOR_1 )
-
-  @staticmethod
-  def create_buttons_total( append: CTkFrame, column: int, row: int ):
-    append = View_Graph.create_frame( append, column, row )
-    append.grid( padx = (13, 0) )
-
-    View_Graph.ELEMENTS[ 0 ] = { }
-
-    today_month = Today.month()
-    for i in range( 12 ):
-      button = Elements.button( append, " ", lambda i = i: View_Graph.update_screen_total( i + 1 ), i, 0, 0, 0 )
-      button.configure( width = 1, height = 1, corner_radius = 0 )
-
-      View_Graph.ELEMENTS[ 0 ][ i ] = button
-
-      if i + 1 == today_month:
-        button.configure( fg_color = COLOR_CONTRAST )
 
   @staticmethod
   def get_data_months():
