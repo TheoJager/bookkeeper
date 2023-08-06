@@ -1,5 +1,4 @@
 from typing import Dict
-
 from application.constants import CATEGORY_INCOME
 from application.date.date import date
 from application.date.today import Today
@@ -51,7 +50,6 @@ class Database_Mutations:
         :ctr_id
       )
     """
-
     Database.query( sql, record )
 
   @staticmethod
@@ -88,6 +86,15 @@ class Database_Mutations:
       } )
 
   @staticmethod
+  def sum() -> float:
+    sql = "SELECT sum(mts_amount) AS mts_total FROM mutations"
+
+    mts = Database.query( sql )
+
+    mts_total = mts[ 0 ][ "mts_total" ]
+    return 0 if mts_total is None else round( mts_total, 2 )
+
+  @staticmethod
   def select_month( month: int ) -> list:
     year = Today.year() - (1 if month > Today.month() else 0)
 
@@ -105,20 +112,17 @@ class Database_Mutations:
       "mts_date_start": date( year, month ),
       "mts_date_end"  : date( year, month + 1 )
     }
-
     mts = Database.query( Database_Mutations.SUM_DATE, record )
 
     mts_total = mts[ 0 ][ "mts_total" ]
     return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
-  def sum() -> float:
-    sql = "SELECT sum(mts_amount) AS mts_total FROM mutations"
-
-    mts = Database.query( sql )
-
-    mts_total = mts[ 0 ][ "mts_total" ]
-    return 0 if mts_total is None else round( mts_total, 2 )
+  def sum_months() -> list:
+    response = [ ]
+    for i in range( 12 ):
+      response.append( Database_Mutations.sum_month( i + 1 ) )
+    return response
 
   @staticmethod
   def select_category_year( ctr_id: int ) -> list:
@@ -171,13 +175,6 @@ class Database_Mutations:
 
     mts_total = mts[ 0 ][ "mts_total" ]
     return 0 if mts_total is None else round( mts_total, 2 )
-
-  @staticmethod
-  def sum_months() -> list:
-    response = [ ]
-    for i in range( 12 ):
-      response.append( Database_Mutations.sum_month( i + 1 ) )
-    return response
 
   @staticmethod
   def sum_category_months( ctr_id: int ) -> list:

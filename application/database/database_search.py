@@ -64,7 +64,6 @@ class Database_Search:
   @staticmethod
   def delete( id: int ):
     sql = 'DELETE FROM search WHERE src_id = :src_id'
-
     record = { 'src_id': id }
     Database.query( sql, record )
 
@@ -110,25 +109,5 @@ class Database_Search:
       ORDER BY
         mts_text
       LIMIT 20
-    """
-    return Database.query( sql )
-
-  @staticmethod
-  def select_searched():
-    sql = """
-      SELECT 
-        mts_id, 
-        mts_date, 
-        mts_amount, 
-        mts_text,
-        src_name,
-        src_match,
-        search.ctr_id
-      FROM 
-        mutations LEFT JOIN search
-      WHERE 
-        mts_text LIKE '%' || src_match || '%'
-      ORDER BY
-        src_match, src_name
     """
     return Database.query( sql )

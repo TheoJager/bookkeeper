@@ -38,7 +38,7 @@ class Database_Categories:
 
   @staticmethod
   def select() -> list:
-    sql = 'SELECT * FROM categories ORDER BY ctr_id'
+    sql = 'SELECT * FROM categories ORDER BY ctr_sequence'
     return Database.query( sql )
 
   @staticmethod
@@ -67,7 +67,6 @@ class Database_Categories:
         :ctr_sequence
       )
     """
-
     Database.query( sql, record )
 
   @staticmethod
@@ -82,13 +81,11 @@ class Database_Categories:
       WHERE 
         ctr_id = :ctr_id
     """
-
     Database.query( sql, record )
 
   @staticmethod
   def delete( id: int ):
     sql = 'DELETE FROM categories WHERE ctr_id = :ctr_id'
-
     record = { 'ctr_id': id }
     Database.query( sql, record )
 
