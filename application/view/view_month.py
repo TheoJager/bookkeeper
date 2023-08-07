@@ -5,7 +5,7 @@ from customtkinter import CTkFrame
 from application.date.date import date
 from application.date.today import Today
 from application.ui.elements import Elements
-from application.constants import W20, W10, CATEGORY_INCOME, COLOR_CONTRAST, CATEGORY_SPAREN
+from application.constants import W20, W10, CATEGORY_INCOME, COLOR_CONTRAST, CATEGORY_CORRECTIE
 from application.database.database_mutations import Database_Mutations
 from application.database.database_categories import Database_Categories
 from application.functions import format_amount, format_percentage
@@ -73,7 +73,7 @@ class View_Month:
         'mts_amount': sum_month * -1,
         'mts_start' : 0,
         'mts_text'  : 'NL51ABNA0518940136: afboeking maand',
-        'ctr_id'    : CATEGORY_SPAREN,
+        'ctr_id'    : CATEGORY_CORRECTIE,
       } )
 
       Database_Mutations.insert( {
@@ -81,7 +81,7 @@ class View_Month:
         'mts_amount': sum_month,
         'mts_start' : 0,
         'mts_text'  : 'NL51ABNA0518940136: bijboeking maand',
-        'ctr_id'    : CATEGORY_SPAREN,
+        'ctr_id'    : CATEGORY_CORRECTIE,
       } )
 
       View_Month.update( month )
