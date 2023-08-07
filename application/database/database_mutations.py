@@ -118,13 +118,6 @@ class Database_Mutations:
     return 0 if mts_total is None else round( mts_total, 2 )
 
   @staticmethod
-  def sum_months() -> list:
-    response = [ ]
-    for i in range( 12 ):
-      response.append( Database_Mutations.sum_month( i + 1 ) )
-    return response
-
-  @staticmethod
   def select_category_year( ctr_id: int ) -> list:
     year = Today.year()
     month = Today.month()

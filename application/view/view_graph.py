@@ -27,19 +27,8 @@ class View_Graph:
     View_Table.update_category_month( ctr_id, month )
 
   @staticmethod
-  def update_screen_total( month: int, ctr_id: int ):
-    View_Date.update( month )
-    View_Month.update( month )
-    View_Table.update( month )
-    return ctr_id
-
-  @staticmethod
   def create( append: CTkFrame ):
     column = 0
-
-    View_Graph.create_graph_total( append, "totaal", View_Graph.get_data_months(), column )
-
-    column += 1
     for ctr in Database_Categories.select():
       data = View_Graph.get_data_category( ctr[ "ctr_id" ] )
 
@@ -47,15 +36,7 @@ class View_Graph:
 
       column += 1
 
-    View_Graph.create_bars( append, 100, 100, { "p": [ 0 ] * 12, "n": [ 0 ] * 12 }, (0, 0) )
-
-  @staticmethod
-  def create_graph_total( append: CTkFrame, ctr_name: str, data: Dict, column: int ):
-    View_Graph.create_header( append, ctr_name, column, 0 )
-
-    View_Graph.create_bars( append, column, 1, data )
-
-    View_Graph.create_buttons( append, 0, column, 2, View_Graph.update_screen_total )
+    View_Graph.create_bars( append, 100, 100, { "p": [ 0 ], "n": [ 0 ] }, (0, 0) )
 
   @staticmethod
   def create_graph( append: CTkFrame, ctr: Dict, data: Dict, column: int ):
@@ -155,20 +136,6 @@ class View_Graph:
           button.configure( fg_color = COLOR_CURRENT )
         else:
           button.configure( fg_color = COLOR_1 )
-
-  @staticmethod
-  def get_data_months():
-    amounts = Database_Mutations.sum_months()
-
-    data = { "p": [ 0 ] * 12, "n": [ 0 ] * 12 }
-
-    for i in range( 12 ):
-      if amounts[ i ] >= 0:
-        data[ "p" ][ i ] = amounts[ i ]
-      else:
-        data[ "n" ][ i ] = amounts[ i ]
-
-    return data
 
   @staticmethod
   def get_data_category( ctr_id: int ):
