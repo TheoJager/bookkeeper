@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 class Database:
+  last_inserted_id: int = 1
 
   @staticmethod
   def root( dir ) -> Path:
@@ -27,6 +28,7 @@ class Database:
     cursor.execute( sql, { } if variables is None else variables )
 
     records = cursor.fetchall()
+    Database.last_inserted_id = cursor.lastrowid
 
     db.commit()
     db.close()

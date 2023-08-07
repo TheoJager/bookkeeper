@@ -71,7 +71,7 @@ class CSVFile:
     return delimiter.group( 1 )
 
   @staticmethod
-  def convert_numbers( number: str ):
+  def convert_numbers( number: str ) -> str:
     return number.replace( ",", "." )
 
   @staticmethod

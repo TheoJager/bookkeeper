@@ -29,6 +29,7 @@ class Database_Categories:
       { 'ctr_income': 0, 'ctr_sequence': 5, 'ctr_name': 'kosten' },
       { 'ctr_income': 0, 'ctr_sequence': 6, 'ctr_name': 'sparen' },
       { 'ctr_income': 1, 'ctr_sequence': 7, 'ctr_name': 'salaris' },
+      { 'ctr_income': 0, 'ctr_sequence': 8, 'ctr_name': 'correctie' },
     ]
     for cat_record in cat_records:
       try:
@@ -55,7 +56,7 @@ class Database_Categories:
     return Database.query( sql, record )
 
   @staticmethod
-  def insert( record: Dict ):
+  def insert( record: Dict ) ->int:
     sql = """
       INSERT INTO categories(
         ctr_name, 
@@ -68,6 +69,7 @@ class Database_Categories:
       )
     """
     Database.query( sql, record )
+    return Database.last_inserted_id
 
   @staticmethod
   def update( record: Dict ):

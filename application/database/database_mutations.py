@@ -34,7 +34,7 @@ class Database_Mutations:
     return Database.query( sql, record )
 
   @staticmethod
-  def insert( record: Dict ):
+  def insert( record: Dict ) ->int:
     sql = """
       INSERT INTO mutations(
         mts_date, 
@@ -51,6 +51,7 @@ class Database_Mutations:
       )
     """
     Database.query( sql, record )
+    return Database.last_inserted_id
 
   @staticmethod
   def update( record: Dict ):
