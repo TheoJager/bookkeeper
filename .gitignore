@@ -28,8 +28,9 @@
 rsa.public
 rsa.private
 .idea/
-images/
+Lib/
+Scripts/
+share/
 __pycache__/
 PennyTracker.sqlite
-identifier.sqlite
-
+pyvenv.cfg
