@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 from typing import Dict
 from customtkinter import CTkFrame, CTkFont
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from application.constants import COLOR_1, COLOR_BACKGROUND_1, COLOR_BACKGROUND_2, W10, COLOR_CONTRAST, COLOR_CURRENT
-from application.date.today import Today
-from application.ui.elements import Elements
-from application.view.view_date import View_Date
-from application.view.view_month import View_Month
-from application.view.view_table import View_Table
-from application.database.database_mutations import Database_Mutations
-from application.database.database_categories import Database_Categories
+from constants import COLOR_1, COLOR_BACKGROUND_1, COLOR_BACKGROUND_2, W10, COLOR_CONTRAST, COLOR_CURRENT
+from date.today import Today
+from ui.elements import Elements
+from view.view_date import View_Date
+from view.view_month import View_Month
+from view.view_table import View_Table
+from database.database_mutations import Database_Mutations
+from database.database_categories import Database_Categories
 
 
 class View_Graph:

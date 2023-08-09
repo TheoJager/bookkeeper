@@ -1,10 +1,10 @@
 from customtkinter import CTkFrame
-from application.ui.elements import Elements
-from application.view.view_table import View_Table
-from application.constants import W20, W10, CATEGORY_INCOME
-from application.functions import format_amount, format_percentage
-from application.database.database_mutations import Database_Mutations
-from application.database.database_categories import Database_Categories
+from ui.elements import Elements
+from view.view_table import View_Table
+from constants import W20, W10, CATEGORY_INCOME
+from functions import format_amount, format_percentage
+from database.database_mutations import Database_Mutations
+from database.database_categories import Database_Categories
 
 
 class View_Year:

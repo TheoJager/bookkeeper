@@ -1,5 +1,5 @@
 from typing import Dict
-from application.database.database import Database
+from database.database import Database
 
 
 class Database_Search:

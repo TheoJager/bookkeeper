@@ -1,15 +1,15 @@
-import application.globals as glb
+import globals as glb
 
 from customtkinter import CTkFrame
 
-from application.date.date import date
-from application.date.today import Today
-from application.ui.elements import Elements
-from application.constants import W20, W10, CATEGORY_INCOME, COLOR_CONTRAST, CATEGORY_CORRECTIE
-from application.database.database_mutations import Database_Mutations
-from application.database.database_categories import Database_Categories
-from application.functions import format_amount, format_percentage
-from application.view.view_table import View_Table
+from date.date import date
+from date.today import Today
+from ui.elements import Elements
+from constants import W20, W10, CATEGORY_INCOME, COLOR_CONTRAST, CATEGORY_CORRECTIE
+from database.database_mutations import Database_Mutations
+from database.database_categories import Database_Categories
+from functions import format_amount, format_percentage
+from view.view_table import View_Table
 
 
 class View_Month:

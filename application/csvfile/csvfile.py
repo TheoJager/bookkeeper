@@ -1,13 +1,12 @@
 import re
 import csv
 import sqlite3
-import application.globals as glb
+import globals as glb
 
 from tkinter import filedialog
-
-from application.view.view import View
-from application.ui.message import Message
-from application.database.database_mutations import Database_Mutations
+from view.view import View
+from ui.message import Message
+from database.database_mutations import Database_Mutations
 
 
 class CSVFile:
@@ -83,4 +82,4 @@ class CSVFile:
   @staticmethod
   def get_category( text: str ) -> str:
     # @TODO insert AI
-    return 0
+    return text

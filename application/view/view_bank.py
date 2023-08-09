@@ -1,7 +1,7 @@
 from customtkinter import CTkFrame, CTkLabel
-from application.functions import format_amount
-from application.ui.elements import Elements
-from application.database.database_mutations import Database_Mutations
+from functions import format_amount
+from ui.elements import Elements
+from database.database_mutations import Database_Mutations
 
 
 class View_Bank:

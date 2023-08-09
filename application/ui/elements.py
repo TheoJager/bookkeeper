@@ -1,5 +1,5 @@
 from customtkinter import *
-from application.constants import W20
+from constants import W20
 
 
 class Elements:

@@ -1,8 +1,8 @@
 from typing import Dict
-from application.constants import CATEGORY_INCOME
-from application.date.date import date
-from application.date.today import Today
-from application.database.database import Database
+from constants import CATEGORY_INCOME
+from date.date import date
+from date.today import Today
+from database.database import Database
 
 
 class Database_Mutations:

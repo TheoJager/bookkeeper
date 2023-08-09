@@ -1,8 +1,8 @@
 import customtkinter
 
-from application.constants import W20
-from application.ui.elements import Elements
-from application.view.view_search import View_Search
+from constants import W20
+from ui.elements import Elements
+from view.view_search import View_Search
 
 # SETTINGS
 #######################################

@@ -3,12 +3,12 @@ from tkinter import END
 
 from customtkinter import CTkFrame, CTkTextbox, CTkComboBox, CTkLabel
 
-from application.ui.message import Message
-from application.ui.elements import Elements
-from application.constants import W20
-from application.functions import format_amount
-from application.database.database_search import Database_Search
-from application.database.database_categories import Database_Categories
+from ui.message import Message
+from ui.elements import Elements
+from constants import W20
+from functions import format_amount
+from database.database_search import Database_Search
+from database.database_categories import Database_Categories
 
 
 class View_Search:

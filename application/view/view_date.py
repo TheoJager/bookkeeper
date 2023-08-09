@@ -1,7 +1,7 @@
 import datetime
 
-from application.date.today import Today
-from application.ui.elements import Elements
+from date.today import Today
+from ui.elements import Elements
 from customtkinter import CTkLabel, CTkFrame
 
 

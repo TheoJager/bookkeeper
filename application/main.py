@@ -1,7 +1,7 @@
-from application.screen.pennytracker import PennyTracker
-from application.database.database_search import Database_Search
-from application.database.database_mutations import Database_Mutations
-from application.database.database_categories import Database_Categories
+from screen.pennytracker import PennyTracker
+from database.database_search import Database_Search
+from database.database_mutations import Database_Mutations
+from database.database_categories import Database_Categories
 
 # NAME
 #######################################
@@ -16,6 +16,7 @@ from application.database.database_categories import Database_Categories
 # COMPILE
 #######################################
 # pyinstaller --onefile --noconsole --icon=favicon.ico main.py
+# pyinstaller --onefile --noconsole --collect-all customtkinter --icon=application/pennytracker.png application/main.py
 
 # DATABASE SETUP
 #######################################

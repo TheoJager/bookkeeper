@@ -1,9 +1,9 @@
 from typing import Dict
 from customtkinter import CTkFrame
-from application.constants import W20, W10
-from application.functions import format_amount
-from application.ui.elements import Elements
-from application.database.database_mutations import Database_Mutations
+from constants import W20, W10
+from functions import format_amount
+from ui.elements import Elements
+from database.database_mutations import Database_Mutations
 
 
 class View_Table:

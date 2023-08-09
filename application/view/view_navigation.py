@@ -1,9 +1,9 @@
-import application.globals as glb
+import globals as glb
 
-from application.constants import W10, W20
-from application.view.view import View
-from application.date.today import Today
-from application.ui.elements import Elements
+from constants import W10, W20
+from view.view import View
+from date.today import Today
+from ui.elements import Elements
 from customtkinter import CTkFrame, CTkLabel
 
 

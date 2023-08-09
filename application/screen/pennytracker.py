@@ -1,20 +1,20 @@
 import locale
 import customtkinter
-import application.globals as glb
+import globals as glb
 
-from application.constants import W20
-from application.date.today import Today
-from application.ui.elements import Elements
-from application.screen.search import Search
-from application.csv.csvfile import CSVFile
-from application.view.view import View
-from application.view.view_bank import View_Bank
-from application.view.view_date import View_Date
-from application.view.view_year import View_Year
-from application.view.view_graph import View_Graph
-from application.view.view_month import View_Month
-from application.view.view_table import View_Table
-from application.view.view_navigation import Navigation
+from constants import W20
+from date.today import Today
+from ui.elements import Elements
+from screen.search import Search
+from csvfile.csvfile import CSVFile
+from view.view import View
+from view.view_bank import View_Bank
+from view.view_date import View_Date
+from view.view_year import View_Year
+from view.view_graph import View_Graph
+from view.view_month import View_Month
+from view.view_table import View_Table
+from view.view_navigation import Navigation
 
 # SETTINGS
 #######################################
