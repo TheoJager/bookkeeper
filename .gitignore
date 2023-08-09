@@ -34,3 +34,5 @@ share/
 __pycache__/
 PennyTracker.sqlite
 pyvenv.cfg
+upx/
+build/

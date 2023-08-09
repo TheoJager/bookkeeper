@@ -15,7 +15,8 @@ from database.database_categories import Database_Categories
 
 # COMPILE
 #######################################
-# pyinstaller --onefile --noconsole --collect-all customtkinter --icon=application/pennytracker.png application/main.py
+# pyinstaller --onedir --noconsole --clean --collect-all customtkinter --icon=application/pennytracker.png --name pennytracker --upx-dir=upx application/main.py
+# pyinstaller --onefile --noconsole --clean --collect-all customtkinter --icon=application/pennytracker.png --name pennytracker --upx-dir=upx application/main.py
 
 # DATABASE SETUP
 #######################################
