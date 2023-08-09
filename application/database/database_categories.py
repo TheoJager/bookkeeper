@@ -56,7 +56,7 @@ class Database_Categories:
     return Database.query( sql, record )
 
   @staticmethod
-  def insert( record: Dict ) ->int:
+  def insert( record: Dict ) -> int:
     sql = """
       INSERT INTO categories(
         ctr_name, 

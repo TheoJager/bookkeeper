@@ -30,7 +30,7 @@ class Database_Search:
     return Database.query( sql, record )
 
   @staticmethod
-  def insert( record: Dict ) ->int:
+  def insert( record: Dict ) -> int:
     sql = """
       INSERT INTO search(
         src_name, 

@@ -37,10 +37,10 @@ class View_Table:
   def create_row( append: CTkFrame, record: Dict, row: int, pady: int ):
     val1, val2, val3, val4, val5 = record
     Elements.label( append, val1, 0, row, W20, pady ).configure( width = 70 )  # date
-    Elements.label( append, val2, 1, row, W10, pady ).configure( width = 250 ) # product
+    Elements.label( append, val2, 1, row, W10, pady ).configure( width = 250 )  # product
     Elements.label( append, val3, 2, row, W10, pady ).configure( width = 90 )  # category
     Elements.label( append, val4, 3, row, W10, pady ).configure( width = 5 )
-    Elements.label( append, val5, 4, row, W10, pady ).configure( width = 40, anchor = "e" ) # amount
+    Elements.label( append, val5, 4, row, W10, pady ).configure( width = 40, anchor = "e" )  # amount
 
   @staticmethod
   def create_headers():
