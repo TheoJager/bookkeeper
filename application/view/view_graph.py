@@ -4,6 +4,7 @@ from typing import Dict
 from customtkinter import CTkFrame, CTkFont
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from constants import COLOR_1, COLOR_BACKGROUND_1, COLOR_BACKGROUND_2, W10, COLOR_CONTRAST, COLOR_CURRENT
+from functions import round_up
 from date.today import Today
 from ui.elements import Elements
 from view.view_date import View_Date
@@ -36,7 +37,7 @@ class View_Graph:
 
       column += 1
 
-    View_Graph.create_bars( append, 100, 100, { "p": [ 0 ], "n": [ 0 ] }, (0, 0) )
+    # View_Graph.create_bars( append, 100, 100, { "p": [ 0 ], "n": [ 0 ] }, (0, 0) )
 
   @staticmethod
   def create_graph( append: CTkFrame, ctr: Dict, data: Dict, column: int ):
@@ -62,6 +63,29 @@ class View_Graph:
 
   @staticmethod
   def create_bars( append: CTkFrame, column: int, row: int, data: Dict, demension: list = (1.5, 2) ):
+    append = View_Graph.create_frame( append, column, row )
+
+    maximum = round( max( data[ "p" ] ) ) + 1
+    minimum = round( min( data[ "n" ] ) ) - 1
+    size = max( abs( maximum ), abs( minimum ) )
+
+    append.configure(height=size*2)
+
+    today_month = Today.month()
+
+    p = data[ "p" ][ today_month: ] + data[ "p" ][ :today_month ]
+    n = data[ "n" ][ today_month: ] + data[ "n" ][ :today_month ]
+
+    column = 0
+    for v in p:
+      Elements.label( append, "", column, 1, 1, 1 ).configure( width = 6, height = round_up( v / 50 ), fg_color = "green" )
+      column += 1
+
+    label = Elements.label( append, "", column, 1, 1, 1 )
+    label.configure( width = 6, height = round_up( size / 50 ), fg_color = "red" )
+
+  @staticmethod
+  def create5_bars( append: CTkFrame, column: int, row: int, data: Dict, demension: list = (1.5, 2) ):
     append = View_Graph.create_frame( append, column, row )
 
     plt.axis( 'off' )
