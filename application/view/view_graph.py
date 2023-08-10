@@ -1,10 +1,6 @@
-import matplotlib.pyplot as plt
-
 from typing import Dict
-from customtkinter import CTkFrame, CTkFont
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from constants import COLOR_1, COLOR_BACKGROUND_1, COLOR_BACKGROUND_2, W10, COLOR_CONTRAST, COLOR_CURRENT
-from functions import round_up
+from customtkinter import CTkFrame
+from constants import COLOR_1, COLOR_CONTRAST, COLOR_CURRENT, W20
 from date.today import Today
 from ui.elements import Elements
 from view.view_date import View_Date
@@ -43,9 +39,7 @@ class View_Graph:
   def create_graph( append: CTkFrame, ctr: Dict, data: Dict, column: int ):
     View_Graph.create_header( append, ctr[ "ctr_name" ], column, 0 )
 
-    View_Graph.create_bars( append, column, 1, data )
-
-    View_Graph.create_buttons( append, ctr[ "ctr_id" ], column, 2, View_Graph.update_screen )
+    View_Graph.create_bars( append, column, 1, data, ctr[ "ctr_id" ] )
 
   @staticmethod
   def create_frame( append: CTkFrame, column: int, row: int ) -> CTkFrame:
@@ -56,20 +50,19 @@ class View_Graph:
   @staticmethod
   def create_header( append: CTkFrame, ctr_name: str, column: int, row: int ):
     append = View_Graph.create_frame( append, column, row )
-    append.grid( padx = W10 )
+    append.grid( padx = W20 )
 
-    header = Elements.header( append, ctr_name, 0, 0, (2, 0) )
+    header = Elements.header( append, ctr_name, 0, 0, 0 )
     header.grid( columnspan = 12 )
 
   @staticmethod
-  def create_bars( append: CTkFrame, column: int, row: int, data: Dict, demension: list = (1.5, 2) ):
+  def create_bars( append: CTkFrame, column: int, row: int, data: Dict, ctr_id: int ):
     append = View_Graph.create_frame( append, column, row )
+    append.grid( padx = W20 )
 
     maximum = round( max( data[ "p" ] ) ) + 1
     minimum = round( min( data[ "n" ] ) ) - 1
     size = max( abs( maximum ), abs( minimum ) )
-
-    append.configure(height=size*2)
 
     today_month = Today.month()
 
@@ -78,75 +71,27 @@ class View_Graph:
 
     column = 0
     for v in p:
-      Elements.label( append, "", column, 1, 1, 1 ).configure( width = 6, height = round_up( v / 50 ), fg_color = "green" )
+      height = (v / size) * 100
+
+      label = Elements.button( append, "", lambda i = column: View_Graph.update_screen( i + 1, ctr_id ), column, 0, 1, 0 )
+      label.configure( width = 6, height = height )
+      label.grid( sticky = "s" )
+
+      if height == 0:
+        label.configure( fg_color = "transparent" )
       column += 1
 
-    label = Elements.label( append, "", column, 1, 1, 1 )
-    label.configure( width = 6, height = round_up( size / 50 ), fg_color = "red" )
+    if min( n ) < 0:
+      column = 0
+      for v in n:
+        height = (abs( v ) / size) * 100
 
-  @staticmethod
-  def create5_bars( append: CTkFrame, column: int, row: int, data: Dict, demension: list = (1.5, 2) ):
-    append = View_Graph.create_frame( append, column, row )
-
-    plt.axis( 'off' )
-
-    maximum = round( max( data[ "p" ] ) ) + 1
-    minimum = round( min( data[ "n" ] ) ) - 1
-    size = max( abs( maximum ), abs( minimum ) )
-
-    fig = plt.figure( figsize = demension, facecolor = COLOR_BACKGROUND_1 )
-    fig.subplots_adjust( left = 0, bottom = 0, right = 0.97, top = 0.97, wspace = 0, hspace = 0 )
-
-    today_month = Today.month()
-
-    p = data[ "p" ][ today_month: ] + data[ "p" ][ :today_month ]
-    n = data[ "n" ][ today_month: ] + data[ "n" ][ :today_month ]
-
-    x = range( 12 )
-    ax = plt.subplot( 111 )
-    ax.bar( x, p, width = 0.8, color = COLOR_1 )
-    ax.bar( x, n, width = 0.8, color = COLOR_BACKGROUND_2 )
-
-    ax.bar( 13, +size, width = 0.8, color = COLOR_BACKGROUND_1 )
-    ax.bar( 13, -size, width = 0.8, color = COLOR_BACKGROUND_1 )
-
-    canvas = FigureCanvasTkAgg( fig, master = append )
-    canvas.get_tk_widget().grid( ipadx = 0, ipady = 0, sticky = "nw" )
-    canvas.draw()
-
-  @staticmethod
-  def create_buttons( append: CTkFrame, ctr_id: int, column: int, row: int, command: callable ):
-    append = View_Graph.create_frame( append, column, row )
-    append.grid( padx = (13, 0) )
-
-    View_Graph.ELEMENTS[ ctr_id ] = { }
-
-    today_month = Today.month()
-    m = [ "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D" ]
-    a = list( range( today_month, 12 ) ) + list( range( today_month ) )
-
-    column = 0
-    for i in a:  # range( 12 ):
-      View_Graph.ELEMENTS[ ctr_id ][ i ] = View_Graph.create_buttons_button(
-        append, column, lambda i = i: command( i + 1, ctr_id )
-      )
-      View_Graph.create_buttons_label(
-        append, column, m[ i ]
-      )
-      column += 1
-
-  @staticmethod
-  def create_buttons_button( append: CTkFrame, column: int, command: callable ):
-    button = Elements.button( append, " ", command, column, 0, 0, 0 )
-    button.configure( width = 1, height = 1, corner_radius = 0 )
-    return button
-
-  @staticmethod
-  def create_buttons_label( append: CTkFrame, column: int, value: str ):
-    label = Elements.label( append, value, column, 1, 0, 0 )
-    label.configure( width = 2, height = 1, corner_radius = 0, font = CTkFont( size = 8 ) )
-    label.grid( padx = (1, 0) )
-    return label
+        label = Elements.button( append, "", lambda i = column: View_Graph.update_screen( i + 1, ctr_id ), column, 1, 1, 0 )
+        label.configure( width = 6, height = height, fg_color = "orange" )
+        label.grid( sticky = "n" )
+        if height == 0:
+          label.configure( fg_color = "transparent" )
+        column += 1
 
   @staticmethod
   def update( month: int ):
