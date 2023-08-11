@@ -1,6 +1,6 @@
 from typing import Dict
 from customtkinter import CTkFrame
-from constants import COLOR_1, COLOR_CONTRAST, COLOR_CURRENT, W20
+from constants import COLOR_1, COLOR_2, COLOR_BACKGROUND_2, COLOR_CONTRAST, COLOR_CURRENT, W20
 from date.today import Today
 from ui.elements import Elements
 from view.view_date import View_Date
@@ -33,8 +33,6 @@ class View_Graph:
 
       column += 1
 
-    # View_Graph.create_bars( append, 100, 100, { "p": [ 0 ], "n": [ 0 ] }, (0, 0) )
-
   @staticmethod
   def create_graph( append: CTkFrame, ctr: Dict, data: Dict, column: int ):
     View_Graph.create_header( append, ctr[ "ctr_name" ], column, 0 )
@@ -65,33 +63,30 @@ class View_Graph:
     size = max( abs( maximum ), abs( minimum ) )
 
     today_month = Today.month()
-
-    p = data[ "p" ][ today_month: ] + data[ "p" ][ :today_month ]
-    n = data[ "n" ][ today_month: ] + data[ "n" ][ :today_month ]
+    months = list( range( today_month, 12 ) ) + list( range( today_month ) )
 
     column = 0
-    for v in p:
-      height = (v / size) * 100
+    for month in months:
+      height_p = (data[ "p" ][ month ] / size) * 100
 
-      label = Elements.button( append, "", lambda i = column: View_Graph.update_screen( i + 1, ctr_id ), column, 0, 1, 0 )
-      label.configure( width = 6, height = height )
+      label = Elements.button( append, "", lambda i = month: View_Graph.update_screen( i + 1, ctr_id ), column, 0, 1, 0 )
+      label.configure( width = 6, height = height_p, bg_color = COLOR_1 )
       label.grid( sticky = "s" )
 
-      if height == 0:
+      if month == today_month - 1:
+        label.configure( fg_color = COLOR_CONTRAST, bg_color = COLOR_CONTRAST )
+      if height_p == 0:
         label.configure( fg_color = "transparent" )
+
+      height_n = (abs( data[ "n" ][ month ] ) / size) * 100
+
+      label = Elements.button( append, "", lambda i = month: View_Graph.update_screen( i + 1, ctr_id ), column, 1, 1, 0 )
+      label.configure( width = 6, height = height_n, fg_color = COLOR_BACKGROUND_2 )
+      label.grid( sticky = "n" )
+      if height_n == 0:
+        label.configure( fg_color = "transparent" )
+
       column += 1
-
-    if min( n ) < 0:
-      column = 0
-      for v in n:
-        height = (abs( v ) / size) * 100
-
-        label = Elements.button( append, "", lambda i = column: View_Graph.update_screen( i + 1, ctr_id ), column, 1, 1, 0 )
-        label.configure( width = 6, height = height, fg_color = "orange" )
-        label.grid( sticky = "n" )
-        if height == 0:
-          label.configure( fg_color = "transparent" )
-        column += 1
 
   @staticmethod
   def update( month: int ):
