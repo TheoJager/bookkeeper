@@ -47,7 +47,7 @@ class CSVFile:
         'mts_amount': CSVFile.convert_numbers( row[ 'Transactiebedrag' ] ),
         'mts_start' : CSVFile.convert_numbers( row[ 'Beginsaldo' ] ),
         'mts_text'  : CSVFile.sanitize( row[ 'Omschrijving' ] ),
-        'ctr_id'    : CSVFile.get_category( row[ 'Omschrijving' ] )
+        # 'ctr_id'    : CSVFile.get_category( row[ 'Omschrijving' ] )
       }
       records.append( record )
 
