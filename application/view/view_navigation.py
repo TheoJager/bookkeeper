@@ -1,7 +1,7 @@
 import globals as glb
 
 from constants import W10, W20
-from view.view import View
+from view.view_update import View
 from date.today import Today
 from ui.elements import Elements
 from customtkinter import CTkFrame, CTkLabel

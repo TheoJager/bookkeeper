@@ -55,6 +55,8 @@ class View_Graph:
 
   @staticmethod
   def create_bars( append: CTkFrame, column: int, row: int, data: Dict, ctr_id: int ):
+    View_Graph.ELEMENTS[ ctr_id ] = { "p": [ 0 ] * 12, "n": [ 0 ] * 12 }
+
     append = View_Graph.create_frame( append, column, row )
     append.grid( padx = W20 )
 
@@ -69,22 +71,25 @@ class View_Graph:
     for month in months:
       height_p = (data[ "p" ][ month ] / size) * 100
 
-      label = Elements.button( append, "", lambda i = month: View_Graph.update_screen( i + 1, ctr_id ), column, 0, 1, 0 )
-      label.configure( width = 6, height = height_p, bg_color = COLOR_1 )
-      label.grid( sticky = "s" )
+      button_p = Elements.button( append, "", lambda i = month: View_Graph.update_screen( i + 1, ctr_id ), column, 0, 1, 0 )
+      button_p.configure( width = 6, height = height_p, bg_color = COLOR_1 )
+      button_p.grid( sticky = "s" )
 
       if month == today_month - 1:
-        label.configure( fg_color = COLOR_CONTRAST, bg_color = COLOR_CONTRAST )
+        button_p.configure( fg_color = COLOR_CONTRAST, bg_color = COLOR_CONTRAST )
       if height_p == 0:
-        label.configure( fg_color = "transparent" )
+        button_p.configure( fg_color = "transparent" )
 
       height_n = (abs( data[ "n" ][ month ] ) / size) * 100
 
-      label = Elements.button( append, "", lambda i = month: View_Graph.update_screen( i + 1, ctr_id ), column, 1, 1, 0 )
-      label.configure( width = 6, height = height_n, fg_color = COLOR_BACKGROUND_2 )
-      label.grid( sticky = "n" )
+      button_n = Elements.button( append, "", lambda i = month: View_Graph.update_screen( i + 1, ctr_id ), column, 1, 1, 0 )
+      button_n.configure( width = 6, height = height_n, fg_color = COLOR_BACKGROUND_2 )
+      button_n.grid( sticky = "n" )
       if height_n == 0:
-        label.configure( fg_color = "transparent" )
+        button_n.configure( fg_color = "transparent" )
+
+      View_Graph.ELEMENTS[ ctr_id ][ 'p' ][ month ] = button_p
+      View_Graph.ELEMENTS[ ctr_id ][ 'n' ][ month ] = button_n
 
       column += 1
 
@@ -92,14 +97,18 @@ class View_Graph:
   def update( month: int ):
     today_month = Today.month()
     for ctr_id in View_Graph.ELEMENTS:
-      for i in View_Graph.ELEMENTS[ ctr_id ]:
-        button = View_Graph.ELEMENTS[ ctr_id ][ i ]
+      for i in range( 12 ):
+        button_p = View_Graph.ELEMENTS[ ctr_id ][ 'p' ][ i ]
+        button_n = View_Graph.ELEMENTS[ ctr_id ][ 'n' ][ i ]
         if i + 1 == today_month:
-          button.configure( fg_color = COLOR_CONTRAST )
+          button_p.configure( fg_color = COLOR_CONTRAST )
+          button_n.configure( fg_color = COLOR_CONTRAST )
         elif i + 1 == month:
-          button.configure( fg_color = COLOR_CURRENT )
+          button_p.configure( fg_color = COLOR_CURRENT )
+          button_n.configure( fg_color = COLOR_CURRENT )
         else:
-          button.configure( fg_color = COLOR_1 )
+          button_p.configure( fg_color = COLOR_1 )
+          button_n.configure( fg_color = COLOR_BACKGROUND_2 )
 
   @staticmethod
   def get_data_category( ctr_id: int ):
