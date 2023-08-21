@@ -9,12 +9,9 @@ from view.view_month import View_Month
 class View:
 
   @staticmethod
-  def initiate():
+  def update( month: int ):
     View_Bank.update()
     View_Year.update()
-
-  @staticmethod
-  def update( month: int ):
     View_Graph.update( month )
     View_Date.update( month )
     View_Month.update( month )

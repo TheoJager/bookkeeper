@@ -4,7 +4,7 @@ import sqlite3
 import globals as glb
 
 from tkinter import filedialog
-from view.view import View
+from view.view_update import View
 from ui.message import Message
 from database.database_mutations import Database_Mutations
 
@@ -23,7 +23,6 @@ class CSVFile:
         except sqlite3.IntegrityError:
           continue
 
-      View.initiate()
       View.update( glb.SELECTED_MONTH )
       Message.ok( 'result', 'import successful' )
 

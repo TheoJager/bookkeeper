@@ -1,6 +1,6 @@
 from typing import Dict
 from customtkinter import CTkFrame
-from constants import COLOR_1, COLOR_2, COLOR_BACKGROUND_2, COLOR_CONTRAST, COLOR_CURRENT, W20
+from constants import COLOR_1, COLOR_BACKGROUND_2, COLOR_CONTRAST, COLOR_CURRENT, W20
 from date.today import Today
 from ui.elements import Elements
 from view.view_date import View_Date

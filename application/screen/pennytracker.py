@@ -7,7 +7,7 @@ from date.today import Today
 from ui.elements import Elements
 from screen.search import Search
 from csvfile.csvfile import CSVFile
-from view.view import View
+from view.view_update import View
 from view.view_bank import View_Bank
 from view.view_date import View_Date
 from view.view_year import View_Year
@@ -107,7 +107,6 @@ class PennyTracker( customtkinter.CTk ):
     # update
     #######################################
 
-    View.initiate()
     View.update( glb.SELECTED_MONTH )
 
     # EXIT
