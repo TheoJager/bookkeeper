@@ -1,6 +1,5 @@
 import re
 import csv
-import sqlite3
 import globals as glb
 
 from tkinter import filedialog
@@ -18,10 +17,7 @@ class CSVFile:
       records = CSVFile.to_records( filename )
       Database_Mutations.insert_base_value( records[ 0 ] )
       for record in records:
-        try:
-          Database_Mutations.insert( record )
-        except sqlite3.IntegrityError:
-          continue
+        Database_Mutations.insert( record )
 
       View.update( glb.SELECTED_MONTH )
       Message.ok( 'result', 'import successful' )

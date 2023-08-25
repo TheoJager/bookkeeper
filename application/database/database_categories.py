@@ -1,5 +1,3 @@
-import sqlite3
-
 from typing import Dict
 from database.database import Database
 
@@ -32,10 +30,7 @@ class Database_Categories:
       { 'ctr_income': 0, 'ctr_sequence': 8, 'ctr_name': 'correctie' },
     ]
     for cat_record in cat_records:
-      try:
-        Database_Categories.insert( cat_record )
-      except sqlite3.IntegrityError:
-        break
+      Database_Categories.insert( cat_record )
 
   @staticmethod
   def select() -> list:

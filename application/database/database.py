@@ -15,16 +15,24 @@ class Database:
 
   @staticmethod
   def query( sql: str, variables: Dict = None ) -> list:
-    db = sqlite3.connect( 'pennytracker.sqlite' )
-    db.row_factory = Database.dict_factory
+    try:
 
-    cursor = db.cursor()
-    cursor.execute( sql, { } if variables is None else variables )
+      db = sqlite3.connect( 'pennytracker.sqlite' )
+      db.row_factory = Database.dict_factory
 
-    records = cursor.fetchall()
-    Database.last_inserted_id = cursor.lastrowid
+      cursor = db.cursor()
+      cursor.execute( sql, { } if variables is None else variables )
 
-    db.commit()
-    db.close()
+      records = cursor.fetchall()
 
-    return records
+      db.commit()
+
+      Database.last_inserted_id = cursor.lastrowid
+
+      db.close()
+
+      return records
+
+    except (sqlite3.IntegrityError, sqlite3.OperationalError):
+      db.close()
+      pass
