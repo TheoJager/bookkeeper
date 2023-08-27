@@ -1,3 +1,5 @@
+import traceback
+
 from screen.pennytracker import PennyTracker
 from database.database_search import Database_Search
 from database.database_mutations import Database_Mutations
@@ -17,18 +19,25 @@ from database.database_categories import Database_Categories
 # pyinstaller --onedir  --noconsole --clean --collect-all customtkinter --icon=application/pennytracker.ico --name pennytracker --upx-dir=venv/upx application/main.py
 # pyinstaller --onefile --noconsole --clean --collect-all customtkinter --icon=application/pennytracker.ico --name pennytracker --upx-dir=venv/upx application/main.py
 
-# DATABASE SETUP
-#######################################
+try:
 
-Database_Categories.create_table_if_not_exists()
-Database_Categories.create_default_records()
+  # DATABASE SETUP
+  #######################################
 
-Database_Mutations.create_table_if_not_exists()
+  Database_Categories.create_table_if_not_exists()
+  Database_Categories.create_default_records()
 
-Database_Search.create_table_if_not_exists()
+  Database_Mutations.create_table_if_not_exists()
 
-# RUN
-#######################################
+  Database_Search.create_table_if_not_exists()
 
-if __name__ == '__main__':
-  PennyTracker().mainloop()
+  # RUN
+  #######################################
+
+  if __name__ == '__main__':
+    PennyTracker().mainloop()
+
+except Exception:
+  log = open( 'error.log', 'w' )
+  traceback.print_exc( file = log )
+  log.close()
