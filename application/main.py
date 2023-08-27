@@ -38,6 +38,6 @@ try:
     PennyTracker().mainloop()
 
 except Exception:
-  log = open( 'error.log', 'w' )
+  log = open( 'error.log', 'a' )
   traceback.print_exc( file = log )
   log.close()
