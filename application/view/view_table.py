@@ -29,7 +29,7 @@ class View_Table:
   @staticmethod
   def create_frame_rows( append: CTkFrame ) -> CTkFrame:
     frame = Elements.scroll( append, 0, 2 )
-    frame.configure( width = 550, fg_color = "transparent", height = 290 )
+    frame.configure( width = 550, fg_color = "transparent", height = 375 )
     View_Table.ELEMENT = frame
     return frame
 
