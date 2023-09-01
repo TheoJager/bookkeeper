@@ -72,7 +72,7 @@ class View_Month:
         'mts_date'  : date_end,
         'mts_amount': sum_month * -1,
         'mts_start' : 0,
-        'mts_text'  : 'NL51ABNA0518940136: afboeking maand',
+        'mts_text'  : 'afboeking maand',
         'ctr_id'    : CATEGORY_CORRECTIE,
       } )
 
@@ -80,7 +80,7 @@ class View_Month:
         'mts_date'  : date_srt,
         'mts_amount': sum_month,
         'mts_start' : 0,
-        'mts_text'  : 'NL51ABNA0518940136: bijboeking maand',
+        'mts_text'  : 'bijboeking maand',
         'ctr_id'    : CATEGORY_CORRECTIE,
       } )
 
